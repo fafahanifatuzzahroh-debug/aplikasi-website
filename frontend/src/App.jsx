@@ -1,30 +1,45 @@
 import { useMemo, useState } from 'react';
 
 const roles = [
-  { id: 'admin', label: 'Admin' },
+  { id: 'superadmin', label: 'Super Admin' },
+  { id: 'adminsekolah', label: 'Admin Sekolah' },
   { id: 'kepsek', label: 'Kepala Sekolah' },
   { id: 'guru', label: 'Guru' },
   { id: 'siswa', label: 'Siswa' },
   { id: 'orangtua', label: 'Orang Tua' },
-  { id: 'ppdb', label: 'Calon Peserta Didik' },
+  { id: 'ppdb', label: 'Calon Siswa' },
 ];
 
 const roleContent = {
-  admin: {
-    headline: 'Pusat kendali data, akses, dan sinkronisasi sekolah',
+  superadmin: {
+    headline: 'Akses penuh untuk kontrol seluruh sistem',
     summary:
-      'Kelola pengguna, audit aktivitas, validasi data, dan monitoring sistem dengan kontrol berbasis peran yang aman.',
+      'Kelola pengguna, sekolah, database, backup, hak akses, dan monitoring aktivitas di seluruh platform.',
+    features: ['Kelola pengguna', 'Kelola sekolah', 'Kelola database', 'Kelola backup', 'Kelola hak akses', 'Monitoring aktivitas'],
+    metrics: [
+      ['128', 'Pengguna aktif'],
+      ['07', 'Sekolah terhubung'],
+      ['99.9%', 'Ketersediaan'],
+      ['04', 'Backup harian'],
+    ],
+  },
+  adminsekolah: {
+    headline: 'Pusat operasional sekolah yang lengkap dan efisien',
+    summary:
+      'Atur siswa, guru, kelas, mata pelajaran, jadwal, PPDB, keuangan, berita, pengumuman, dan dokumen sekolah.',
+    features: ['Dashboard', 'Kelola siswa', 'Kelola guru', 'Kelola kelas', 'Kelola mata pelajaran', 'Kelola jadwal', 'Kelola PPDB', 'Kelola keuangan', 'Kelola berita', 'Kelola pengumuman', 'Kelola dokumen'],
     metrics: [
       ['1.842', 'Data siswa aktif'],
-      ['99.2%', 'Sinkronisasi'],
-      ['24', 'Perubahan hari ini'],
-      ['07', 'Peringatan keamanan'],
+      ['127', 'Guru terdata'],
+      ['46', 'Kelas berjalan'],
+      ['18', 'Agenda sekolah'],
     ],
   },
   kepsek: {
-    headline: 'Dashboard strategi untuk keputusan berbasis data',
+    headline: 'Dashboard laporan dan pengawasan sekolah',
     summary:
-      'Pantau mutu sekolah, kehadiran, progres program prioritas, dan dokumen yang menunggu persetujuan.',
+      'Pantau guru, siswa, absensi, nilai, lalu cetak laporan dengan ringkasan yang cepat dibaca.',
+    features: ['Dashboard laporan', 'Monitoring guru', 'Monitoring siswa', 'Monitoring absensi', 'Monitoring nilai', 'Cetak laporan'],
     metrics: [
       ['89.4', 'Skor mutu'],
       ['96.8%', 'Kehadiran'],
@@ -33,9 +48,10 @@ const roleContent = {
     ],
   },
   guru: {
-    headline: 'Semua kebutuhan mengajar dan penilaian dalam satu layar',
+    headline: 'Ruang kerja guru untuk pembelajaran sehari-hari',
     summary:
-      'Kelola presensi, materi, tugas, nilai, dan komunikasi pembelajaran tanpa berpindah aplikasi.',
+      'Input nilai, absensi, tugas, materi, jurnal mengajar, catatan siswa, dan cetak rapor dari satu dashboard.',
+    features: ['Input nilai', 'Input absensi', 'Input tugas', 'Upload materi', 'Input jurnal mengajar', 'Input catatan siswa', 'Cetak rapor'],
     metrics: [
       ['8', 'Kelas aktif'],
       ['27', 'Tugas terkirim'],
@@ -44,9 +60,10 @@ const roleContent = {
     ],
   },
   siswa: {
-    headline: 'Portal belajar yang ringan dan mudah dipahami',
+    headline: 'Dashboard siswa yang ringkas dan informatif',
     summary:
-      'Lihat jadwal, tugas, absensi, nilai, dan pengumuman sekolah dengan tampilan yang fokus dan cepat.',
+      'Akses profil, nilai, jadwal, tugas, materi, absensi, pengumuman, dan rapor digital dengan cepat.',
+    features: ['Dashboard siswa', 'Profil siswa', 'Nilai', 'Jadwal', 'Tugas', 'Materi', 'Absensi', 'Pengumuman', 'Rapor digital'],
     metrics: [
       ['92%', 'Kehadiran'],
       ['12', 'Tugas aktif'],
@@ -55,9 +72,10 @@ const roleContent = {
     ],
   },
   orangtua: {
-    headline: 'Komunikasi transparan dengan sekolah',
+    headline: 'Kontrol perkembangan anak secara transparan',
     summary:
-      'Pantau kehadiran anak, nilai, pesan wali kelas, dan layanan administrasi dari satu portal.',
+      'Pantau nilai anak, absensi, pembayaran, dan pengumuman sekolah dari satu portal keluarga.',
+    features: ['Monitoring nilai anak', 'Monitoring absensi', 'Monitoring pembayaran', 'Pengumuman sekolah'],
     metrics: [
       ['95%', 'Kehadiran anak'],
       ['04', 'Pesan wali kelas'],
@@ -66,9 +84,10 @@ const roleContent = {
     ],
   },
   ppdb: {
-    headline: 'Alur pendaftaran online yang jelas dan cepat',
+    headline: 'Layanan pendaftaran online untuk calon siswa',
     summary:
-      'Bantu calon peserta didik mendaftar, unggah dokumen, cek status seleksi, dan menerima pengumuman.',
+      'Daftar online, unggah dokumen, cetak formulir, dan cek status seleksi tanpa proses manual yang panjang.',
+    features: ['Pendaftaran online', 'Upload dokumen', 'Cetak formulir', 'Status seleksi'],
     metrics: [
       ['1.120', 'Pendaftar'],
       ['86%', 'Terverifikasi'],
@@ -106,7 +125,7 @@ const modules = [
 ];
 
 export default function App() {
-  const [activeRole, setActiveRole] = useState('admin');
+  const [activeRole, setActiveRole] = useState('superadmin');
   const current = useMemo(() => roleContent[activeRole], [activeRole]);
 
   return (
@@ -137,10 +156,10 @@ export default function App() {
           <div className="row g-4 align-items-center">
             <div className="col-lg-7">
               <span className="badge soft-badge mb-3">Modern • Responsif • Aman</span>
-              <h2 className="hero-title">Kelola akademik, komunikasi, dan layanan sekolah dalam satu platform.</h2>
+              <h2 className="hero-title">Semua peran sekolah bekerja dalam satu sistem yang terintegrasi.</h2>
               <p className="lead text-muted mt-3">
-                Dirancang untuk Admin, Kepala Sekolah, Guru, Siswa, Orang Tua, dan Calon Peserta Didik dengan akses
-                berbasis peran dan pengalaman pengguna yang cepat.
+                Dirancang untuk Super Admin, Admin Sekolah, Kepala Sekolah, Guru, Siswa, Orang Tua, dan Calon Siswa
+                dengan akses berbasis peran dan pengalaman pengguna yang cepat.
               </p>
               <div className="d-flex flex-wrap gap-3 mt-4">
                 <a className="btn btn-primary btn-lg" href="#dashboard">Buka Dashboard</a>
@@ -176,9 +195,9 @@ export default function App() {
               <h3 className="section-title">{roles.find((role) => role.id === activeRole)?.label}</h3>
               <p className="text-muted">{current.summary}</p>
               <div className="quick-list">
-                <div className="quick-item">Kelola prioritas hari ini</div>
-                <div className="quick-item">Lihat notifikasi penting</div>
-                <div className="quick-item">Pantau progres utama</div>
+                {current.features?.slice(0, 3).map((feature) => (
+                  <div className="quick-item" key={feature}>{feature}</div>
+                ))}
               </div>
             </div>
           </aside>
@@ -197,6 +216,16 @@ export default function App() {
                     <div className="panel-card h-100">
                       <h4>{module.title}</h4>
                       <p className="text-muted mb-0">{module.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="row g-3 mt-1">
+                {current.features?.map((feature) => (
+                  <div className="col-md-6" key={feature}>
+                    <div className="panel-card h-100">
+                      <h4>{feature}</h4>
+                      <p className="text-muted mb-0">Fitur aktif untuk peran {roles.find((role) => role.id === activeRole)?.label}.</p>
                     </div>
                   </div>
                 ))}

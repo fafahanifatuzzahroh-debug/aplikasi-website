@@ -5,8 +5,9 @@ import bcrypt from 'bcryptjs';
 const router = Router();
 
 const demoUsers = [
-  { id: 1, name: 'Admin Sekolah', role: 'admin', email: 'admin@sma.sch.id', password: bcrypt.hashSync('password123', 10) },
-  { id: 2, name: 'Kepala Sekolah', role: 'kepsek', email: 'kepsek@sma.sch.id', password: bcrypt.hashSync('password123', 10) },
+  { id: 1, name: 'Super Admin', role: 'superadmin', email: 'superadmin@sma.sch.id', password: bcrypt.hashSync('password123', 10) },
+  { id: 2, name: 'Admin Sekolah', role: 'adminsekolah', email: 'admin@sma.sch.id', password: bcrypt.hashSync('password123', 10) },
+  { id: 3, name: 'Kepala Sekolah', role: 'kepsek', email: 'kepsek@sma.sch.id', password: bcrypt.hashSync('password123', 10) },
 ];
 
 router.post('/login', async (req, res) => {
