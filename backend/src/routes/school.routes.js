@@ -89,6 +89,61 @@ const grades = [
   { id: 4, siswa: 'Raka Wijaya', kelas: 'XII Bahasa 1', mapel: 'Bahasa Inggris', jenis: 'UAS', nilai: 87 },
 ];
 
+const reports = [
+  {
+    id: 1,
+    siswa: 'Andi Pratama',
+    kelas: 'XI IPA 1',
+    semester: 'Semester Ganjil 2025/2026',
+    nilai: 88,
+    absensi: 96,
+    prestasi: 'Juara Olimpiade Sains Sekolah',
+    catatanWaliKelas: 'Aktif dan disiplin.',
+    qr: 'RAPOR-ANDI-2025',
+    tandaTangan: 'Kepala Sekolah Digital',
+  },
+  {
+    id: 2,
+    siswa: 'Siti Aulia',
+    kelas: 'XI IPS 2',
+    semester: 'Semester Ganjil 2025/2026',
+    nilai: 91,
+    absensi: 98,
+    prestasi: 'Finalis Debat Bahasa Indonesia',
+    catatanWaliKelas: 'Memiliki kepemimpinan kelas yang baik.',
+    qr: 'RAPOR-SITI-2025',
+    tandaTangan: 'Kepala Sekolah Digital',
+  },
+];
+
+const learningContents = [
+  { id: 1, judul: 'Fisika Gerak Lurus', tipe: 'Materi', kelas: 'XI IPA 1', format: 'PDF', status: 'Tersedia' },
+  { id: 2, judul: 'Video Praktikum Kimia', tipe: 'Video Pembelajaran', kelas: 'XII IPA', format: 'MP4', status: 'Tersedia' },
+  { id: 3, judul: 'Tugas Struktur Teks', tipe: 'Tugas Online', kelas: 'XI IPS 2', format: 'Form', status: 'Menunggu pengumpulan' },
+  { id: 4, judul: 'Quiz Bab Statistik', tipe: 'Quiz Online', kelas: 'X IPA 2', format: 'Objektif', status: 'Siap dikerjakan' },
+  { id: 5, judul: 'Ujian CBT Matematika', tipe: 'Ujian Online CBT', kelas: 'XII IPA', format: 'Secure CBT', status: 'Dijadwalkan' },
+];
+
+const cbtBanks = [
+  { id: 1, judul: 'Matematika Dasar', tipe: 'Pilihan ganda', acakSoal: true, acakJawaban: true, timer: 60, koreksi: 'Otomatis' },
+  { id: 2, judul: 'Bahasa Indonesia', tipe: 'Essay', acakSoal: false, acakJawaban: false, timer: 45, koreksi: 'Manual + otomatis' },
+  { id: 3, judul: 'Biologi', tipe: 'Campuran', acakSoal: true, acakJawaban: true, timer: 90, koreksi: 'Otomatis' },
+];
+
+const financialTransactions = [
+  { id: 1, jenis: 'SPP', nama: 'Andi Pratama', metode: 'Transfer Bank', nominal: 450000, periode: 'Juni 2026', status: 'Lunas' },
+  { id: 2, jenis: 'Uang Pembangunan', nama: 'Siti Aulia', metode: 'QRIS', nominal: 300000, periode: 'Semester Ganjil', status: 'Menunggu verifikasi' },
+  { id: 3, jenis: 'Uang Ujian', nama: 'Raka Wijaya', metode: 'E-Wallet', nominal: 150000, periode: 'Ujian Akhir Semester', status: 'Lunas' },
+  { id: 4, jenis: 'Pembayaran Lainnya', nama: 'Dina Safitri', metode: 'Transfer Bank', nominal: 100000, periode: 'Kegiatan OSIS', status: 'Belum bayar' },
+];
+
+const libraryBooks = [
+  { id: 1, judul: 'Laskar Pelangi', penulis: 'Andrea Hirata', barcode: 'BK-001', stok: 12, dipinjam: 3, denda: 0 },
+  { id: 2, judul: 'Fisika SMA', penulis: 'Tim MGMP', barcode: 'BK-002', stok: 8, dipinjam: 4, denda: 10000 },
+  { id: 3, judul: 'Atlas Geografi', penulis: 'M. Siregar', barcode: 'BK-003', stok: 6, dipinjam: 1, denda: 0 },
+  { id: 4, judul: 'Kamus Bahasa Inggris', penulis: 'Pusat Bahasa', barcode: 'BK-004', stok: 10, dipinjam: 2, denda: 5000 },
+];
+
 const gradeWeights = {
   Tugas: 15,
   UH: 20,
@@ -96,6 +151,29 @@ const gradeWeights = {
   UAS: 25,
   Praktik: 10,
   Sikap: 5,
+};
+
+const shuffleArray = (items) => [...items].sort(() => Math.random() - 0.5);
+
+const buildReport = (payload = {}) => {
+  const studentGrades = grades.filter((item) => item.siswa === payload.siswa);
+  const average = studentGrades.length
+    ? Math.round(studentGrades.reduce((sum, item) => sum + Number(item.nilai || 0), 0) / studentGrades.length)
+    : 0;
+  const attendanceRatio = payload.absensi ?? 96;
+
+  return {
+    id: Date.now(),
+    siswa: payload.siswa || 'Siswa baru',
+    kelas: payload.kelas || 'Kelas belum ditentukan',
+    semester: payload.semester || 'Semester Ganjil 2025/2026',
+    nilai: payload.nilai ?? average,
+    absensi: attendanceRatio,
+    prestasi: payload.prestasi || 'Belum ada prestasi tercatat',
+    catatanWaliKelas: payload.catatanWaliKelas || 'Catatan wali kelas belum diisi.',
+    qr: payload.qr || `RAPOR-${String(payload.siswa || 'SISWA').toUpperCase().replace(/[^A-Z0-9]/g, '-')}`,
+    tandaTangan: payload.tandaTangan || 'Kepala Sekolah Digital',
+  };
 };
 
 const parseBody = (req) => req.body ?? {};
@@ -449,6 +527,181 @@ router.delete('/grades/:id', authenticateToken, authorizeRoles('superadmin', 'ad
 
 router.get('/grades/ranking', authenticateToken, (req, res) => {
   res.json({ data: calculateGradeRanking() });
+});
+
+router.get('/reports', authenticateToken, (req, res) => {
+  res.json({ data: reports });
+});
+
+router.post('/reports', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'kepsek', 'guru'), (req, res) => {
+  const report = buildReport(parseBody(req));
+  reports.push(report);
+  res.status(201).json({ message: 'Rapor berhasil disimpan', data: report });
+});
+
+router.post('/reports/generate', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'kepsek', 'guru'), (req, res) => {
+  const report = buildReport(parseBody(req));
+  reports.push(report);
+  res.status(201).json({ message: 'Rapor otomatis berhasil dibuat', data: report });
+});
+
+router.get('/reports/verify/:qr', authenticateToken, (req, res) => {
+  const report = reports.find((item) => item.qr.toLowerCase() === req.params.qr.toLowerCase());
+
+  if (!report) {
+    return res.status(404).json({ message: 'QR rapor tidak ditemukan' });
+  }
+
+  return res.json({ message: 'QR rapor valid', data: report });
+});
+
+router.put('/reports/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'kepsek', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = reports.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Rapor tidak ditemukan' });
+  }
+
+  reports[index] = { ...reports[index], ...payload };
+  return res.json({ message: 'Rapor berhasil diperbarui', data: reports[index] });
+});
+
+router.delete('/reports/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'kepsek', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = reports.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Rapor tidak ditemukan' });
+  }
+
+  const removed = reports.splice(index, 1)[0];
+  return res.json({ message: 'Rapor berhasil dihapus', data: removed });
+});
+
+router.get('/learning', authenticateToken, (req, res) => {
+  res.json({ data: learningContents });
+});
+
+router.post('/learning', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const payload = parseBody(req);
+  const newItem = { id: Date.now(), ...payload };
+  learningContents.push(newItem);
+  res.status(201).json({ message: 'Konten e-learning berhasil ditambahkan', data: newItem });
+});
+
+router.put('/learning/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = learningContents.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Konten e-learning tidak ditemukan' });
+  }
+
+  learningContents[index] = { ...learningContents[index], ...payload };
+  return res.json({ message: 'Konten e-learning berhasil diperbarui', data: learningContents[index] });
+});
+
+router.delete('/learning/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = learningContents.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Konten e-learning tidak ditemukan' });
+  }
+
+  const removed = learningContents.splice(index, 1)[0];
+  return res.json({ message: 'Konten e-learning berhasil dihapus', data: removed });
+});
+
+router.get('/cbt/bank', authenticateToken, (req, res) => {
+  res.json({ data: cbtBanks });
+});
+
+router.post('/cbt/bank', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const payload = parseBody(req);
+  const newItem = { id: Date.now(), ...payload };
+  cbtBanks.push(newItem);
+  res.status(201).json({ message: 'Bank soal berhasil ditambahkan', data: newItem });
+});
+
+router.post('/cbt/start', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const payload = parseBody(req);
+  const selectedBank = cbtBanks.find((item) => item.id === Number(payload.bankId)) || cbtBanks[0];
+
+  return res.json({
+    message: 'Sesi CBT dimulai',
+    data: {
+      bank: selectedBank,
+      timer: selectedBank.timer,
+      questions: shuffleArray(payload.questions || []),
+      answersShuffled: Boolean(selectedBank.acakJawaban),
+    },
+  });
+});
+
+router.get('/finance', authenticateToken, (req, res) => {
+  res.json({ data: financialTransactions });
+});
+
+router.post('/finance', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const payload = parseBody(req);
+  const transaction = { id: Date.now(), ...payload };
+  financialTransactions.push(transaction);
+  res.status(201).json({ message: 'Transaksi keuangan berhasil ditambahkan', data: transaction });
+});
+
+router.get('/finance/summary', authenticateToken, (req, res) => {
+  const summary = financialTransactions.reduce(
+    (accumulator, item) => {
+      accumulator.total += Number(item.nominal || 0);
+      accumulator.byMethod[item.metode] = (accumulator.byMethod[item.metode] || 0) + Number(item.nominal || 0);
+      accumulator.byType[item.jenis] = (accumulator.byType[item.jenis] || 0) + Number(item.nominal || 0);
+      return accumulator;
+    },
+    { total: 0, byMethod: {}, byType: {} },
+  );
+
+  res.json({ data: summary });
+});
+
+router.get('/library/books', authenticateToken, (req, res) => {
+  res.json({ data: libraryBooks });
+});
+
+router.post('/library/books', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'petugas', 'guru'), (req, res) => {
+  const payload = parseBody(req);
+  const book = { id: Date.now(), ...payload };
+  libraryBooks.push(book);
+  res.status(201).json({ message: 'Buku berhasil ditambahkan', data: book });
+});
+
+router.post('/library/borrow', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'petugas', 'guru'), (req, res) => {
+  const { id, qty = 1 } = parseBody(req);
+  const book = libraryBooks.find((item) => item.id === Number(id));
+
+  if (!book) {
+    return res.status(404).json({ message: 'Buku tidak ditemukan' });
+  }
+
+  book.stok = Math.max(0, book.stok - Number(qty));
+  book.dipinjam += Number(qty);
+  return res.json({ message: 'Peminjaman berhasil dicatat', data: book });
+});
+
+router.post('/library/return', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'petugas', 'guru'), (req, res) => {
+  const { id, qty = 1 } = parseBody(req);
+  const book = libraryBooks.find((item) => item.id === Number(id));
+
+  if (!book) {
+    return res.status(404).json({ message: 'Buku tidak ditemukan' });
+  }
+
+  book.stok += Number(qty);
+  book.dipinjam = Math.max(0, book.dipinjam - Number(qty));
+  return res.json({ message: 'Pengembalian berhasil dicatat', data: book });
 });
 
 export default router;

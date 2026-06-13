@@ -229,6 +229,61 @@ const gradeWeights = {
   Sikap: 5,
 };
 
+const reportSeed = [
+  {
+    id: 1,
+    siswa: 'Andi Pratama',
+    kelas: 'XI IPA 1',
+    semester: 'Semester Ganjil 2025/2026',
+    nilai: '88,4',
+    absensi: '96%',
+    prestasi: 'Juara Olimpiade Sains Sekolah',
+    catatanWaliKelas: 'Aktif, disiplin, dan konsisten mengerjakan tugas.',
+    qr: 'RAPOR-ANDI-2025',
+    tandaTangan: 'Kepala Sekolah Digital',
+  },
+  {
+    id: 2,
+    siswa: 'Siti Aulia',
+    kelas: 'XI IPS 2',
+    semester: 'Semester Ganjil 2025/2026',
+    nilai: '91,2',
+    absensi: '98%',
+    prestasi: 'Finalis Debat Bahasa Indonesia',
+    catatanWaliKelas: 'Sangat baik pada literasi dan kepemimpinan kelas.',
+    qr: 'RAPOR-SITI-2025',
+    tandaTangan: 'Kepala Sekolah Digital',
+  },
+];
+
+const learningMaterials = [
+  { id: 1, judul: 'Fisika Gerak Lurus', tipe: 'Materi', kelas: 'XI IPA 1', status: 'Tersedia', format: 'PDF' },
+  { id: 2, judul: 'Video Praktikum Kimia', tipe: 'Video Pembelajaran', kelas: 'XII IPA', status: 'Tersedia', format: 'MP4' },
+  { id: 3, judul: 'Tugas Struktur Teks', tipe: 'Tugas Online', kelas: 'XI IPS 2', status: 'Perlu dikumpulkan', format: 'Form' },
+  { id: 4, judul: 'Quiz Bab Statistik', tipe: 'Quiz Online', kelas: 'X IPA 2', status: 'Siap dikerjakan', format: 'Objektif' },
+  { id: 5, judul: 'Ujian CBT Matematika', tipe: 'Ujian Online CBT', kelas: 'XII IPA', status: 'Dijadwalkan', format: 'Secure CBT' },
+];
+
+const cbtBank = [
+  { id: 1, judul: 'Matematika Dasar', tipe: 'Pilihan ganda', acakSoal: 'Ya', acakJawaban: 'Ya', timer: '60 menit', koreksi: 'Otomatis' },
+  { id: 2, judul: 'Bahasa Indonesia', tipe: 'Essay', acakSoal: 'Tidak', acakJawaban: 'Tidak', timer: '45 menit', koreksi: 'Manual + otomatis' },
+  { id: 3, judul: 'Biologi', tipe: 'Campuran', acakSoal: 'Ya', acakJawaban: 'Ya', timer: '90 menit', koreksi: 'Otomatis' },
+];
+
+const financeRecords = [
+  { id: 1, jenis: 'SPP', nama: 'Andi Pratama', metode: 'Transfer Bank', nominal: 'Rp 450.000', periode: 'Juni 2026', status: 'Lunas' },
+  { id: 2, jenis: 'Uang Pembangunan', nama: 'Siti Aulia', metode: 'QRIS', nominal: 'Rp 300.000', periode: 'Semester Ganjil', status: 'Menunggu verifikasi' },
+  { id: 3, jenis: 'Uang Ujian', nama: 'Raka Wijaya', metode: 'E-Wallet', nominal: 'Rp 150.000', periode: 'Ujian Akhir Semester', status: 'Lunas' },
+  { id: 4, jenis: 'Pembayaran Lainnya', nama: 'Dina Safitri', metode: 'Transfer Bank', nominal: 'Rp 100.000', periode: 'Kegiatan OSIS', status: 'Belum bayar' },
+];
+
+const libraryBooks = [
+  { id: 1, judul: 'Laskar Pelangi', penulis: 'Andrea Hirata', barcode: 'BK-001', stok: 12, pinjam: 3, denda: 'Rp 0' },
+  { id: 2, judul: 'Fisika SMA', penulis: 'Tim MGMP', barcode: 'BK-002', stok: 8, pinjam: 4, denda: 'Rp 10.000' },
+  { id: 3, judul: 'Atlas Geografi', penulis: 'M. Siregar', barcode: 'BK-003', stok: 6, pinjam: 1, denda: 'Rp 0' },
+  { id: 4, judul: 'Kamus Bahasa Inggris', penulis: 'Pusat Bahasa', barcode: 'BK-004', stok: 10, pinjam: 2, denda: 'Rp 5.000' },
+];
+
 const attendanceFormFields = [
   { name: 'siswa', label: 'Nama Siswa', type: 'text', placeholder: 'Nama siswa' },
   { name: 'kelas', label: 'Kelas', type: 'text', placeholder: 'Contoh: XI IPA 1' },
@@ -589,6 +644,26 @@ export default function App() {
   const gradeRanking = gradeAverages.map((item, index) => ({ ...item, rank: index + 1 }));
   const gradeGraphValues = gradeAverages.slice(0, 7).map((item) => item.average);
   const gradeGraphLabels = gradeAverages.slice(0, 7).map((item) => item.name.split(' ')[0]);
+  const reportPreview = useMemo(() => {
+    const studentGrades = gradeRecords.filter((item) => item.siswa === selectedStudent?.nama);
+    const average = studentGrades.length ? Math.round(studentGrades.reduce((sum, item) => sum + Number(item.nilai || 0), 0) / studentGrades.length) : gradeAverages[0]?.average || 0;
+    const attendanceRecordsForStudent = attendanceRecords.filter((item) => item.siswa === selectedStudent?.nama);
+    const attendanceRatio = attendanceRecordsForStudent.length
+      ? Math.round((attendanceRecordsForStudent.filter((item) => item.status === 'Hadir').length / attendanceRecordsForStudent.length) * 100)
+      : attendancePercent;
+
+    return {
+      siswa: selectedStudent?.nama || 'Siswa terpilih',
+      kelas: selectedStudent?.kelas || '-',
+      semester: reportSeed[0].semester,
+      nilai: average,
+      absensi: `${attendanceRatio}%`,
+      prestasi: studentGrades.length ? 'Rapor otomatis berhasil digenerate' : 'Belum ada prestasi tercatat',
+      catatanWaliKelas: 'Catatan wali kelas tersinkron dari ringkasan akademik dan kehadiran.',
+      qr: `RAPOR-${String(selectedStudent?.nama || 'SISWA').toUpperCase().replace(/[^A-Z0-9]/g, '-')}`,
+      tandaTangan: 'Kepala Sekolah Digital',
+    };
+  }, [attendancePercent, attendanceRecords, gradeAverages, gradeRecords, selectedStudent]);
 
   const resetStudentForm = () => {
     setStudentEditId(null);
@@ -2043,6 +2118,301 @@ export default function App() {
                       ))}
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="rapor-digital">
+          <SectionTitle
+            eyebrow="Modul Rapor Digital"
+            title="Generate rapor otomatis, cetak PDF, tanda tangan digital, dan QR verification"
+            subtitle="Isi rapor menggabungkan nilai, absensi, prestasi, dan catatan wali kelas dalam satu tampilan siap cetak."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{reportSeed.length} rapor tersedia</strong>
+              <span>QR verification aktif • Tanda tangan digital tersimpan</span>
+            </div>
+            <div className="toolbar-actions">
+              <button className="btn btn-outline-light" type="button" onClick={() => window.print()}>Cetak PDF</button>
+              <button className="btn btn-outline-light" type="button">Generate Rapor Otomatis</button>
+              <button className="btn btn-outline-light" type="button">Verifikasi QR</button>
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-5">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">Preview Rapor</p>
+                <h4 className="mb-3">{reportPreview.siswa}</h4>
+                <div className="detail-list">
+                  <div><span>Kelas</span><strong>{reportPreview.kelas}</strong></div>
+                  <div><span>Semester</span><strong>{reportPreview.semester}</strong></div>
+                  <div><span>Nilai</span><strong>{reportPreview.nilai}</strong></div>
+                  <div><span>Absensi</span><strong>{reportPreview.absensi}</strong></div>
+                  <div><span>Prestasi</span><strong>{reportPreview.prestasi}</strong></div>
+                  <div><span>Catatan Wali Kelas</span><strong>{reportPreview.catatanWaliKelas}</strong></div>
+                  <div><span>QR</span><strong>{reportPreview.qr}</strong></div>
+                  <div><span>Tanda Tangan Digital</span><strong>{reportPreview.tandaTangan}</strong></div>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-7">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Siswa</th>
+                        <th>Kelas</th>
+                        <th>Nilai</th>
+                        <th>Absensi</th>
+                        <th>Prestasi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reportSeed.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.siswa}</td>
+                          <td>{item.kelas}</td>
+                          <td>{item.nilai}</td>
+                          <td>{item.absensi}</td>
+                          <td>{item.prestasi}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Isi Rapor</p>
+                    <div className="feature-chip-list">
+                      {['Nilai', 'Absensi', 'Prestasi', 'Catatan wali kelas'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Fitur Modul</p>
+                    <div className="feature-chip-list">
+                      {['Generate rapor otomatis', 'Cetak PDF', 'Tanda tangan digital', 'QR verification'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="e-learning">
+          <SectionTitle
+            eyebrow="Modul E-Learning"
+            title="Upload materi, video pembelajaran, tugas online, quiz, dan ujian CBT"
+            subtitle="Konten belajar digital disiapkan untuk kelas, guru, dan siswa dalam satu jalur pembelajaran modern."
+          />
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">Alur Pembelajaran</p>
+                <h4 className="mb-3">Distribusi konten</h4>
+                <div className="feature-chip-list">
+                  {['Upload materi', 'Video pembelajaran', 'Tugas online', 'Quiz online', 'Ujian online CBT'].map((feature) => (
+                    <span className="feature-chip" key={feature}>{feature}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Judul</th>
+                        <th>Tipe</th>
+                        <th>Kelas</th>
+                        <th>Format</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {learningMaterials.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.judul}</td>
+                          <td>{item.tipe}</td>
+                          <td>{item.kelas}</td>
+                          <td>{item.format}</td>
+                          <td>{item.status}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="cbt">
+          <SectionTitle
+            eyebrow="Modul CBT"
+            title="Bank soal, pilihan ganda, essay, acak soal, timer ujian, dan koreksi otomatis"
+            subtitle="Mesin ujian berbasis komputer disiapkan untuk evaluasi yang aman, cepat, dan terukur."
+          />
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">Fitur CBT</p>
+                <div className="feature-chip-list">
+                  {['Bank soal', 'Pilihan ganda', 'Essay', 'Acak soal', 'Acak jawaban', 'Timer ujian', 'Koreksi otomatis'].map((feature) => (
+                    <span className="feature-chip" key={feature}>{feature}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Bank Soal</th>
+                        <th>Jenis</th>
+                        <th>Acak Soal</th>
+                        <th>Acak Jawaban</th>
+                        <th>Timer</th>
+                        <th>Koreksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cbtBank.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.judul}</td>
+                          <td>{item.tipe}</td>
+                          <td>{item.acakSoal}</td>
+                          <td>{item.acakJawaban}</td>
+                          <td>{item.timer}</td>
+                          <td>{item.koreksi}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="keuangan">
+          <SectionTitle
+            eyebrow="Modul Keuangan"
+            title="SPP, uang pembangunan, uang ujian, dan pembayaran lainnya"
+            subtitle="Transaksi sekolah dapat dilacak per metode pembayaran dan diringkas menjadi laporan harian, bulanan, dan tahunan."
+          />
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">Metode Pembayaran</p>
+                <div className="feature-chip-list">
+                  {['Transfer Bank', 'QRIS', 'E-Wallet'].map((feature) => (
+                    <span className="feature-chip" key={feature}>{feature}</span>
+                  ))}
+                </div>
+                <hr className="border-secondary" />
+                <p className="eyebrow mb-1">Laporan</p>
+                <div className="feature-chip-list">
+                  {['Harian', 'Bulanan', 'Tahunan'].map((feature) => (
+                    <span className="feature-chip" key={feature}>{feature}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Jenis</th>
+                        <th>Nama</th>
+                        <th>Metode</th>
+                        <th>Nominal</th>
+                        <th>Periode</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {financeRecords.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.jenis}</td>
+                          <td>{item.nama}</td>
+                          <td>{item.metode}</td>
+                          <td>{item.nominal}</td>
+                          <td>{item.periode}</td>
+                          <td>{item.status}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="perpustakaan">
+          <SectionTitle
+            eyebrow="Modul Perpustakaan"
+            title="Data buku, peminjaman, pengembalian, denda, dan barcode buku"
+            subtitle="Inventaris perpustakaan disusun agar mudah dipindai, dipinjam, dikembalikan, dan dilacak dendanya."
+          />
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">Fitur Perpustakaan</p>
+                <div className="feature-chip-list">
+                  {['Data buku', 'Peminjaman', 'Pengembalian', 'Denda', 'Barcode buku'].map((feature) => (
+                    <span className="feature-chip" key={feature}>{feature}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Judul</th>
+                        <th>Penulis</th>
+                        <th>Barcode</th>
+                        <th>Stok</th>
+                        <th>Dipinjam</th>
+                        <th>Denda</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {libraryBooks.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.judul}</td>
+                          <td>{item.penulis}</td>
+                          <td>{item.barcode}</td>
+                          <td>{item.stok}</td>
+                          <td>{item.pinjam}</td>
+                          <td>{item.denda}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
