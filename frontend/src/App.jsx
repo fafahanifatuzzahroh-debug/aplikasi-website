@@ -143,6 +143,108 @@ const ppdbFlow = [
   'Cetak bukti pendaftaran',
 ];
 
+const studentFormFields = [
+  { name: 'nis', label: 'NIS', type: 'text', placeholder: 'Nomor induk sekolah' },
+  { name: 'nisn', label: 'NISN', type: 'text', placeholder: 'Nomor induk nasional' },
+  { name: 'nama', label: 'Nama', type: 'text', placeholder: 'Nama lengkap siswa' },
+  { name: 'kelas', label: 'Kelas', type: 'text', placeholder: 'Contoh: XI IPA 1' },
+  { name: 'jurusan', label: 'Jurusan', type: 'text', placeholder: 'Contoh: IPA' },
+  { name: 'alamat', label: 'Alamat', type: 'textarea', placeholder: 'Alamat siswa' },
+  { name: 'orangTua', label: 'Orang Tua', type: 'text', placeholder: 'Nama orang tua/wali' },
+  { name: 'riwayatPendidikan', label: 'Riwayat Pendidikan', type: 'textarea', placeholder: 'Contoh: SMP Negeri 2 Bandung' },
+];
+
+const teacherFormFields = [
+  { name: 'nama', label: 'Nama Guru', type: 'text', placeholder: 'Nama lengkap guru' },
+  { name: 'nip', label: 'NIP', type: 'text', placeholder: 'Nomor induk pegawai' },
+  { name: 'mapel', label: 'Mata Pelajaran', type: 'text', placeholder: 'Contoh: Matematika' },
+  { name: 'sertifikasi', label: 'Data Sertifikasi', type: 'text', placeholder: 'Contoh: Sertifikat Pendidik 2023' },
+  { name: 'riwayatMengajar', label: 'Riwayat Mengajar', type: 'textarea', placeholder: 'Riwayat penugasan mengajar' },
+  { name: 'jadwalMengajar', label: 'Jadwal Mengajar', type: 'text', placeholder: 'Contoh: Senin, Rabu, Jumat' },
+  { name: 'absensi', label: 'Absensi Guru', type: 'text', placeholder: 'Contoh: Hadir 98%' },
+];
+
+const studentSeed = [
+  {
+    id: 1,
+    nis: '2024001',
+    nisn: '0038456123',
+    nama: 'Andi Pratama',
+    kelas: 'XI IPA 1',
+    jurusan: 'IPA',
+    alamat: 'Jl. Melati 12',
+    orangTua: 'Budi Santoso',
+    riwayatPendidikan: 'SMP Negeri 2 Bandung',
+  },
+  {
+    id: 2,
+    nis: '2024002',
+    nisn: '0038456124',
+    nama: 'Siti Aulia',
+    kelas: 'XI IPS 2',
+    jurusan: 'IPS',
+    alamat: 'Jl. Kenanga 8',
+    orangTua: 'Rahmawati',
+    riwayatPendidikan: 'SMP Negeri 5 Bandung',
+  },
+  {
+    id: 3,
+    nis: '2024003',
+    nisn: '0038456125',
+    nama: 'Raka Wijaya',
+    kelas: 'XII Bahasa 1',
+    jurusan: 'Bahasa',
+    alamat: 'Jl. Mawar 21',
+    orangTua: 'Hendra Wijaya',
+    riwayatPendidikan: 'SMP Al-Hikmah',
+  },
+];
+
+const teacherSeed = [
+  {
+    id: 1,
+    nama: 'Siti Rahmawati, S.Pd',
+    nip: '19881217 201903 2 001',
+    mapel: 'Matematika',
+    sertifikasi: 'Sertifikat Pendidik 2022',
+    riwayatMengajar: 'Wali kelas XI IPA sejak 2021 dan pengampu kelas Olimpiade.',
+    jadwalMengajar: 'Senin, Rabu, Jumat',
+    absensi: 'Hadir 98%',
+  },
+  {
+    id: 2,
+    nama: 'Dedi Kusnadi, S.Pd',
+    nip: '19790712 200804 1 002',
+    mapel: 'Bahasa Indonesia',
+    sertifikasi: 'Sertifikasi Guru 2021',
+    riwayatMengajar: 'Mengampu kelas X dan XII serta pembina literasi sekolah.',
+    jadwalMengajar: 'Selasa, Kamis, Sabtu',
+    absensi: 'Hadir 100%',
+  },
+  {
+    id: 3,
+    nama: 'Maya Lestari, M.Pd',
+    nip: '19850203 201607 2 003',
+    mapel: 'Biologi',
+    sertifikasi: 'Sertifikat Pendidik 2023',
+    riwayatMengajar: 'Koordinator laboratorium dan pengajar praktikum.',
+    jadwalMengajar: 'Senin, Selasa, Kamis',
+    absensi: 'Hadir 97%',
+  },
+];
+
+function downloadCsv(filename, rows) {
+  const escapeCell = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+  const csv = rows.map((row) => row.map(escapeCell).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function BarChart({ title, subtitle, labels, values, tone }) {
   const maxValue = Math.max(...values);
 
@@ -241,9 +343,167 @@ export default function App() {
     namaOrangTua: '',
   });
   const [submission, setSubmission] = useState(null);
+  const [studentRecords, setStudentRecords] = useState(studentSeed);
+  const [teacherRecords, setTeacherRecords] = useState(teacherSeed);
+  const [studentQuery, setStudentQuery] = useState('');
+  const [teacherQuery, setTeacherQuery] = useState('');
+  const [studentImportName, setStudentImportName] = useState('Belum ada file');
+  const [teacherImportName, setTeacherImportName] = useState('Belum ada file');
+  const [studentEditId, setStudentEditId] = useState(null);
+  const [teacherEditId, setTeacherEditId] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(studentSeed[0].id);
+  const [selectedTeacherId, setSelectedTeacherId] = useState(teacherSeed[0].id);
+  const [studentForm, setStudentForm] = useState({
+    nis: '',
+    nisn: '',
+    nama: '',
+    kelas: '',
+    jurusan: '',
+    alamat: '',
+    orangTua: '',
+    riwayatPendidikan: '',
+  });
+  const [teacherForm, setTeacherForm] = useState({
+    nama: '',
+    nip: '',
+    mapel: '',
+    sertifikasi: '',
+    riwayatMengajar: '',
+    jadwalMengajar: '',
+    absensi: '',
+  });
 
   const current = useMemo(() => roleContent[activeRole], [activeRole]);
   const registrationNumber = useMemo(() => `PPDB-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`, []);
+  const filteredStudents = useMemo(
+    () => studentRecords.filter((item) => [item.nis, item.nisn, item.nama, item.kelas, item.jurusan].join(' ').toLowerCase().includes(studentQuery.toLowerCase())),
+    [studentRecords, studentQuery],
+  );
+  const filteredTeachers = useMemo(
+    () => teacherRecords.filter((item) => [item.nama, item.nip, item.mapel, item.sertifikasi].join(' ').toLowerCase().includes(teacherQuery.toLowerCase())),
+    [teacherRecords, teacherQuery],
+  );
+  const selectedStudent = useMemo(
+    () => studentRecords.find((item) => item.id === selectedStudentId) || studentRecords[0],
+    [studentRecords, selectedStudentId],
+  );
+  const selectedTeacher = useMemo(
+    () => teacherRecords.find((item) => item.id === selectedTeacherId) || teacherRecords[0],
+    [teacherRecords, selectedTeacherId],
+  );
+
+  const resetStudentForm = () => {
+    setStudentEditId(null);
+    setStudentForm({ nis: '', nisn: '', nama: '', kelas: '', jurusan: '', alamat: '', orangTua: '', riwayatPendidikan: '' });
+  };
+
+  const resetTeacherForm = () => {
+    setTeacherEditId(null);
+    setTeacherForm({ nama: '', nip: '', mapel: '', sertifikasi: '', riwayatMengajar: '', jadwalMengajar: '', absensi: '' });
+  };
+
+  const handleStudentFormChange = (event) => {
+    const { name, value } = event.target;
+    setStudentForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTeacherFormChange = (event) => {
+    const { name, value } = event.target;
+    setTeacherForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleStudentSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...studentForm };
+
+    if (studentEditId) {
+      setStudentRecords((prev) => prev.map((item) => (item.id === studentEditId ? { ...item, ...payload } : item)));
+      setSelectedStudentId(studentEditId);
+    } else {
+      const nextId = Date.now();
+      setStudentRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedStudentId(nextId);
+    }
+
+    resetStudentForm();
+  };
+
+  const handleTeacherSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...teacherForm };
+
+    if (teacherEditId) {
+      setTeacherRecords((prev) => prev.map((item) => (item.id === teacherEditId ? { ...item, ...payload } : item)));
+      setSelectedTeacherId(teacherEditId);
+    } else {
+      const nextId = Date.now();
+      setTeacherRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedTeacherId(nextId);
+    }
+
+    resetTeacherForm();
+  };
+
+  const handleStudentEdit = (student) => {
+    setStudentEditId(student.id);
+    setStudentForm({
+      nis: student.nis,
+      nisn: student.nisn,
+      nama: student.nama,
+      kelas: student.kelas,
+      jurusan: student.jurusan,
+      alamat: student.alamat,
+      orangTua: student.orangTua,
+      riwayatPendidikan: student.riwayatPendidikan,
+    });
+  };
+
+  const handleTeacherEdit = (teacher) => {
+    setTeacherEditId(teacher.id);
+    setTeacherForm({
+      nama: teacher.nama,
+      nip: teacher.nip,
+      mapel: teacher.mapel,
+      sertifikasi: teacher.sertifikasi,
+      riwayatMengajar: teacher.riwayatMengajar,
+      jadwalMengajar: teacher.jadwalMengajar,
+      absensi: teacher.absensi,
+    });
+  };
+
+  const handleStudentDelete = (id) => {
+    setStudentRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedStudentId((currentId) => (currentId === id ? studentSeed[0].id : currentId));
+  };
+
+  const handleTeacherDelete = (id) => {
+    setTeacherRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedTeacherId((currentId) => (currentId === id ? teacherSeed[0].id : currentId));
+  };
+
+  const handleStudentExport = () => {
+    const rows = [
+      ['NIS', 'NISN', 'Nama', 'Kelas', 'Jurusan', 'Alamat', 'Orang Tua', 'Riwayat Pendidikan'],
+      ...filteredStudents.map((item) => [item.nis, item.nisn, item.nama, item.kelas, item.jurusan, item.alamat, item.orangTua, item.riwayatPendidikan]),
+    ];
+    downloadCsv('data-siswa.csv', rows);
+  };
+
+  const handleTeacherExport = () => {
+    const rows = [
+      ['Nama Guru', 'NIP', 'Mata Pelajaran', 'Sertifikasi', 'Riwayat Mengajar', 'Jadwal Mengajar', 'Absensi'],
+      ...filteredTeachers.map((item) => [item.nama, item.nip, item.mapel, item.sertifikasi, item.riwayatMengajar, item.jadwalMengajar, item.absensi]),
+    ];
+    downloadCsv('data-guru.csv', rows);
+  };
+
+  const handleStudentImport = (event) => {
+    setStudentImportName(event.target.files?.[0]?.name || 'Belum ada file');
+  };
+
+  const handleTeacherImport = (event) => {
+    setTeacherImportName(event.target.files?.[0]?.name || 'Belum ada file');
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -604,6 +864,226 @@ export default function App() {
                     ))}
                   </div>
                 </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="data-siswa">
+          <SectionTitle
+            eyebrow="Modul Data Siswa"
+            title="Kelola data siswa secara cepat dan terstruktur"
+            subtitle="Tambah, edit, hapus, detail, pencarian siswa, impor Excel, ekspor Excel, dan cetak PDF tersedia di satu modul."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredStudents.length} siswa ditemukan</strong>
+              <span>Import: {studentImportName}</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari siswa" value={studentQuery} onChange={(event) => setStudentQuery(event.target.value)} />
+              <label className="btn btn-outline-light file-button">
+                Import Excel
+                <input type="file" accept=".xlsx,.xls,.csv" onChange={handleStudentImport} hidden />
+              </label>
+              <button className="btn btn-outline-light" type="button" onClick={handleStudentExport}>Export Excel</button>
+              <button className="btn btn-outline-light" type="button" onClick={() => window.print()}>Cetak PDF</button>
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                  <div>
+                    <p className="eyebrow mb-1">{studentEditId ? 'Edit Siswa' : 'Tambah Siswa'}</p>
+                    <h4 className="mb-0">Form data siswa</h4>
+                  </div>
+                  {studentEditId ? <span className="chart-badge chart-badge-students">Mode edit</span> : null}
+                </div>
+                <form className="data-form" onSubmit={handleStudentSubmit}>
+                  <div className="row g-3">
+                    {studentFormFields.map((field) => (
+                      <div className={field.type === 'textarea' ? 'col-12' : 'col-12'} key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`student-${field.name}`}>{field.label}</label>
+                        {field.type === 'textarea' ? (
+                          <textarea className="form-control sis-input" id={`student-${field.name}`} name={field.name} rows="2" placeholder={field.placeholder} value={studentForm[field.name]} onChange={handleStudentFormChange} required />
+                        ) : (
+                          <input className="form-control sis-input" id={`student-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={studentForm[field.name]} onChange={handleStudentFormChange} required />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{studentEditId ? 'Simpan Perubahan' : 'Tambah Siswa'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={resetStudentForm}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>NIS</th>
+                        <th>Nama</th>
+                        <th>Kelas</th>
+                        <th>Jurusan</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredStudents.map((student) => (
+                        <tr key={student.id} className={selectedStudent?.id === student.id ? 'table-active' : ''}>
+                          <td>{student.nis}</td>
+                          <td>{student.nama}</td>
+                          <td>{student.kelas}</td>
+                          <td>{student.jurusan}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedStudentId(student.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleStudentEdit(student)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleStudentDelete(student.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Detail Siswa</p>
+                    <h4 className="mb-3">{selectedStudent?.nama}</h4>
+                    <div className="detail-list">
+                      <div><span>NISN</span><strong>{selectedStudent?.nisn}</strong></div>
+                      <div><span>Alamat</span><strong>{selectedStudent?.alamat}</strong></div>
+                      <div><span>Orang Tua</span><strong>{selectedStudent?.orangTua}</strong></div>
+                      <div><span>Riwayat Pendidikan</span><strong>{selectedStudent?.riwayatPendidikan}</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Fitur Modul</p>
+                    <div className="feature-chip-list">
+                      {['Tambah siswa', 'Edit siswa', 'Hapus siswa', 'Detail siswa', 'Pencarian siswa', 'Import Excel', 'Export Excel', 'Cetak PDF'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="data-guru">
+          <SectionTitle
+            eyebrow="Modul Data Guru"
+            title="CRUD guru dengan sertifikasi, riwayat, jadwal, dan absensi"
+            subtitle="Data guru diorganisasi agar mudah dicari, diperbarui, dan dipantau oleh sekolah maupun kepala sekolah."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredTeachers.length} guru ditemukan</strong>
+              <span>Import: {teacherImportName}</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari guru" value={teacherQuery} onChange={(event) => setTeacherQuery(event.target.value)} />
+              <label className="btn btn-outline-light file-button">
+                Import Excel
+                <input type="file" accept=".xlsx,.xls,.csv" onChange={handleTeacherImport} hidden />
+              </label>
+              <button className="btn btn-outline-light" type="button" onClick={handleTeacherExport}>Export Excel</button>
+              <button className="btn btn-outline-light" type="button" onClick={() => window.print()}>Cetak PDF</button>
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                  <div>
+                    <p className="eyebrow mb-1">{teacherEditId ? 'Edit Guru' : 'Tambah Guru'}</p>
+                    <h4 className="mb-0">Form data guru</h4>
+                  </div>
+                  {teacherEditId ? <span className="chart-badge chart-badge-grades">Mode edit</span> : null}
+                </div>
+                <form className="data-form" onSubmit={handleTeacherSubmit}>
+                  <div className="row g-3">
+                    {teacherFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`teacher-${field.name}`}>{field.label}</label>
+                        {field.type === 'textarea' ? (
+                          <textarea className="form-control sis-input" id={`teacher-${field.name}`} name={field.name} rows="2" placeholder={field.placeholder} value={teacherForm[field.name]} onChange={handleTeacherFormChange} required />
+                        ) : (
+                          <input className="form-control sis-input" id={`teacher-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={teacherForm[field.name]} onChange={handleTeacherFormChange} required />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{teacherEditId ? 'Simpan Perubahan' : 'Tambah Guru'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={resetTeacherForm}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Nama</th>
+                        <th>Mapel</th>
+                        <th>Sertifikasi</th>
+                        <th>Jadwal</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredTeachers.map((teacher) => (
+                        <tr key={teacher.id} className={selectedTeacher?.id === teacher.id ? 'table-active' : ''}>
+                          <td>{teacher.nama}</td>
+                          <td>{teacher.mapel}</td>
+                          <td>{teacher.sertifikasi}</td>
+                          <td>{teacher.jadwalMengajar}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedTeacherId(teacher.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleTeacherEdit(teacher)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleTeacherDelete(teacher.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Detail Guru</p>
+                    <h4 className="mb-3">{selectedTeacher?.nama}</h4>
+                    <div className="detail-list">
+                      <div><span>NIP</span><strong>{selectedTeacher?.nip}</strong></div>
+                      <div><span>Riwayat Mengajar</span><strong>{selectedTeacher?.riwayatMengajar}</strong></div>
+                      <div><span>Jadwal Mengajar</span><strong>{selectedTeacher?.jadwalMengajar}</strong></div>
+                      <div><span>Absensi Guru</span><strong>{selectedTeacher?.absensi}</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Fitur Modul</p>
+                    <div className="feature-chip-list">
+                      {['CRUD Guru', 'Data Sertifikasi', 'Riwayat Mengajar', 'Jadwal Mengajar', 'Absensi Guru'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
