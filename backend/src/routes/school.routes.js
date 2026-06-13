@@ -76,7 +76,50 @@ const schedules = [
   { id: 3, jenis: 'Jadwal Ujian', target: 'XII Bahasa', mapel: 'Bahasa Inggris', guru: 'Nina Marlina, S.Pd', waktu: '22 Agu 08.00' },
 ];
 
+const attendances = [
+  { id: 1, siswa: 'Andi Pratama', kelas: 'XI IPA 1', tanggal: '2026-06-13', status: 'Hadir', qr: 'ABS-ANDI-001' },
+  { id: 2, siswa: 'Siti Aulia', kelas: 'XI IPS 2', tanggal: '2026-06-13', status: 'Izin', qr: 'ABS-SITI-002' },
+  { id: 3, siswa: 'Raka Wijaya', kelas: 'XII Bahasa 1', tanggal: '2026-06-13', status: 'Sakit', qr: 'ABS-RAKA-003' },
+];
+
+const grades = [
+  { id: 1, siswa: 'Andi Pratama', kelas: 'XI IPA 1', mapel: 'Matematika', jenis: 'UH', nilai: 88 },
+  { id: 2, siswa: 'Andi Pratama', kelas: 'XI IPA 1', mapel: 'Biologi', jenis: 'Tugas', nilai: 84 },
+  { id: 3, siswa: 'Siti Aulia', kelas: 'XI IPS 2', mapel: 'Ekonomi', jenis: 'UTS', nilai: 91 },
+  { id: 4, siswa: 'Raka Wijaya', kelas: 'XII Bahasa 1', mapel: 'Bahasa Inggris', jenis: 'UAS', nilai: 87 },
+];
+
+const gradeWeights = {
+  Tugas: 15,
+  UH: 20,
+  UTS: 25,
+  UAS: 25,
+  Praktik: 10,
+  Sikap: 5,
+};
+
 const parseBody = (req) => req.body ?? {};
+const calculateGradeRanking = () => {
+  const grouped = grades.reduce((accumulator, item) => {
+    if (!accumulator[item.siswa]) {
+      accumulator[item.siswa] = { total: 0, weight: 0, kelas: item.kelas };
+    }
+
+    const weight = gradeWeights[item.jenis] || 1;
+    accumulator[item.siswa].total += item.nilai * weight;
+    accumulator[item.siswa].weight += weight;
+    return accumulator;
+  }, {});
+
+  return Object.entries(grouped)
+    .map(([name, value]) => ({
+      name,
+      kelas: value.kelas,
+      average: Math.round(value.total / value.weight),
+    }))
+    .sort((left, right) => right.average - left.average)
+    .map((item, index) => ({ ...item, rank: index + 1 }));
+};
 
 router.get('/dashboard', authenticateToken, (req, res) => {
   res.json({
@@ -307,6 +350,105 @@ router.delete('/schedules/:id', authenticateToken, authorizeRoles('superadmin', 
 
   const removed = schedules.splice(index, 1)[0];
   return res.json({ message: 'Jadwal berhasil dihapus', data: removed });
+});
+
+router.get('/attendance', authenticateToken, (req, res) => {
+  res.json({ data: attendances });
+});
+
+router.post('/attendance', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const payload = parseBody(req);
+  const newAttendance = { id: Date.now(), ...payload };
+  attendances.push(newAttendance);
+  res.status(201).json({ message: 'Absensi berhasil ditambahkan', data: newAttendance });
+});
+
+router.put('/attendance/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = attendances.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Absensi tidak ditemukan' });
+  }
+
+  attendances[index] = { ...attendances[index], ...payload };
+  return res.json({ message: 'Absensi berhasil diperbarui', data: attendances[index] });
+});
+
+router.delete('/attendance/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = attendances.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Absensi tidak ditemukan' });
+  }
+
+  const removed = attendances.splice(index, 1)[0];
+  return res.json({ message: 'Absensi berhasil dihapus', data: removed });
+});
+
+router.post('/attendance/scan', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const { qr } = parseBody(req);
+  const attendance = attendances.find((item) => item.qr.toLowerCase() === String(qr || '').toLowerCase());
+
+  if (!attendance) {
+    return res.status(404).json({ message: 'QR absensi tidak ditemukan' });
+  }
+
+  return res.json({ message: 'QR absensi berhasil dipindai', data: attendance });
+});
+
+router.get('/attendance/summary', authenticateToken, (req, res) => {
+  const summary = attendances.reduce(
+    (accumulator, item) => {
+      accumulator[item.status] = (accumulator[item.status] || 0) + 1;
+      return accumulator;
+    },
+    { Hadir: 0, Izin: 0, Sakit: 0, Alpha: 0 },
+  );
+
+  res.json({ data: summary });
+});
+
+router.get('/grades', authenticateToken, (req, res) => {
+  res.json({ data: grades });
+});
+
+router.post('/grades', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const payload = parseBody(req);
+  const newGrade = { id: Date.now(), ...payload };
+  grades.push(newGrade);
+  res.status(201).json({ message: 'Nilai berhasil ditambahkan', data: newGrade });
+});
+
+router.put('/grades/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = grades.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Nilai tidak ditemukan' });
+  }
+
+  grades[index] = { ...grades[index], ...payload };
+  return res.json({ message: 'Nilai berhasil diperbarui', data: grades[index] });
+});
+
+router.delete('/grades/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah', 'guru'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = grades.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Nilai tidak ditemukan' });
+  }
+
+  const removed = grades.splice(index, 1)[0];
+  return res.json({ message: 'Nilai berhasil dihapus', data: removed });
+});
+
+router.get('/grades/ranking', authenticateToken, (req, res) => {
+  res.json({ data: calculateGradeRanking() });
 });
 
 export default router;

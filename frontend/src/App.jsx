@@ -200,6 +200,51 @@ const scheduleFormFields = [
   { name: 'waktu', label: 'Waktu', type: 'text', placeholder: 'Contoh: Senin 07.00 - 08.30' },
 ];
 
+const attendanceTypes = ['Hadir', 'Izin', 'Sakit', 'Alpha'];
+
+const attendanceSeed = [
+  { id: 1, siswa: 'Andi Pratama', kelas: 'XI IPA 1', tanggal: '2026-06-13', status: 'Hadir', qr: 'ABS-ANDI-001' },
+  { id: 2, siswa: 'Siti Aulia', kelas: 'XI IPS 2', tanggal: '2026-06-13', status: 'Izin', qr: 'ABS-SITI-002' },
+  { id: 3, siswa: 'Raka Wijaya', kelas: 'XII Bahasa 1', tanggal: '2026-06-13', status: 'Sakit', qr: 'ABS-RAKA-003' },
+  { id: 4, siswa: 'Dina Safitri', kelas: 'X IPA 2', tanggal: '2026-06-13', status: 'Alpha', qr: 'ABS-DINA-004' },
+];
+
+const gradeSeed = [
+  { id: 1, siswa: 'Andi Pratama', kelas: 'XI IPA 1', mapel: 'Matematika', jenis: 'UH', nilai: 88 },
+  { id: 2, siswa: 'Andi Pratama', kelas: 'XI IPA 1', mapel: 'Biologi', jenis: 'Tugas', nilai: 84 },
+  { id: 3, siswa: 'Siti Aulia', kelas: 'XI IPS 2', mapel: 'Ekonomi', jenis: 'UTS', nilai: 91 },
+  { id: 4, siswa: 'Raka Wijaya', kelas: 'XII Bahasa 1', mapel: 'Bahasa Inggris', jenis: 'UAS', nilai: 87 },
+  { id: 5, siswa: 'Dina Safitri', kelas: 'X IPA 2', mapel: 'Fisika', jenis: 'Praktik', nilai: 93 },
+  { id: 6, siswa: 'Maya Wulandari', kelas: 'XI IPA 1', mapel: 'Sikap', jenis: 'Sikap', nilai: 96 },
+];
+
+const gradeTypes = ['Tugas', 'UH', 'UTS', 'UAS', 'Praktik', 'Sikap'];
+
+const gradeWeights = {
+  Tugas: 15,
+  UH: 20,
+  UTS: 25,
+  UAS: 25,
+  Praktik: 10,
+  Sikap: 5,
+};
+
+const attendanceFormFields = [
+  { name: 'siswa', label: 'Nama Siswa', type: 'text', placeholder: 'Nama siswa' },
+  { name: 'kelas', label: 'Kelas', type: 'text', placeholder: 'Contoh: XI IPA 1' },
+  { name: 'tanggal', label: 'Tanggal', type: 'date' },
+  { name: 'status', label: 'Jenis Absensi', type: 'select', options: attendanceTypes },
+  { name: 'qr', label: 'Kode QR', type: 'text', placeholder: 'Kode QR absensi' },
+];
+
+const gradeFormFields = [
+  { name: 'siswa', label: 'Nama Siswa', type: 'text', placeholder: 'Nama siswa' },
+  { name: 'kelas', label: 'Kelas', type: 'text', placeholder: 'Contoh: XI IPA 1' },
+  { name: 'mapel', label: 'Mata Pelajaran', type: 'text', placeholder: 'Nama mapel' },
+  { name: 'jenis', label: 'Jenis Nilai', type: 'select', options: gradeTypes },
+  { name: 'nilai', label: 'Nilai', type: 'number', placeholder: 'Contoh: 85' },
+];
+
 const studentFormFields = [
   { name: 'nis', label: 'NIS', type: 'text', placeholder: 'Nomor induk sekolah' },
   { name: 'nisn', label: 'NISN', type: 'text', placeholder: 'Nomor induk nasional' },
@@ -413,14 +458,26 @@ export default function App() {
   const [selectedTeacherId, setSelectedTeacherId] = useState(teacherSeed[0].id);
   const [subjectRecords, setSubjectRecords] = useState(subjectSeed);
   const [scheduleRecords, setScheduleRecords] = useState(scheduleSeed);
+  const [attendanceRecords, setAttendanceRecords] = useState(attendanceSeed);
+  const [gradeRecords, setGradeRecords] = useState(gradeSeed);
   const [subjectQuery, setSubjectQuery] = useState('');
   const [scheduleQuery, setScheduleQuery] = useState('');
+  const [attendanceQuery, setAttendanceQuery] = useState('');
+  const [gradeQuery, setGradeQuery] = useState('');
+  const [gradeImportName, setGradeImportName] = useState('Belum ada file');
   const [selectedSubjectId, setSelectedSubjectId] = useState(subjectSeed[0].id);
   const [selectedScheduleId, setSelectedScheduleId] = useState(scheduleSeed[0].id);
+  const [selectedAttendanceId, setSelectedAttendanceId] = useState(attendanceSeed[0].id);
+  const [selectedGradeId, setSelectedGradeId] = useState(gradeSeed[0].id);
   const [subjectEditId, setSubjectEditId] = useState(null);
   const [scheduleEditId, setScheduleEditId] = useState(null);
+  const [attendanceEditId, setAttendanceEditId] = useState(null);
+  const [gradeEditId, setGradeEditId] = useState(null);
   const [subjectForm, setSubjectForm] = useState({ nama: '', kelompok: '', guruPengampu: '', kkm: '' });
   const [scheduleForm, setScheduleForm] = useState({ jenis: '', target: '', mapel: '', guru: '', waktu: '' });
+  const [attendanceForm, setAttendanceForm] = useState({ siswa: '', kelas: '', tanggal: '', status: 'Hadir', qr: '' });
+  const [gradeForm, setGradeForm] = useState({ siswa: '', kelas: '', mapel: '', jenis: 'Tugas', nilai: '' });
+  const [scanValue, setScanValue] = useState('');
   const [studentForm, setStudentForm] = useState({
     nis: '',
     nisn: '',
@@ -471,6 +528,14 @@ export default function App() {
     () => scheduleRecords.filter((item) => [item.jenis, item.target, item.mapel, item.guru, item.waktu].join(' ').toLowerCase().includes(scheduleQuery.toLowerCase())),
     [scheduleRecords, scheduleQuery],
   );
+  const filteredAttendance = useMemo(
+    () => attendanceRecords.filter((item) => [item.siswa, item.kelas, item.status, item.qr].join(' ').toLowerCase().includes(attendanceQuery.toLowerCase())),
+    [attendanceRecords, attendanceQuery],
+  );
+  const filteredGrades = useMemo(
+    () => gradeRecords.filter((item) => [item.siswa, item.kelas, item.mapel, item.jenis].join(' ').toLowerCase().includes(gradeQuery.toLowerCase())),
+    [gradeRecords, gradeQuery],
+  );
   const selectedSubject = useMemo(
     () => subjectRecords.find((item) => item.id === selectedSubjectId) || subjectRecords[0],
     [subjectRecords, selectedSubjectId],
@@ -479,6 +544,51 @@ export default function App() {
     () => scheduleRecords.find((item) => item.id === selectedScheduleId) || scheduleRecords[0],
     [scheduleRecords, selectedScheduleId],
   );
+  const selectedAttendance = useMemo(
+    () => attendanceRecords.find((item) => item.id === selectedAttendanceId) || attendanceRecords[0],
+    [attendanceRecords, selectedAttendanceId],
+  );
+  const selectedGrade = useMemo(
+    () => gradeRecords.find((item) => item.id === selectedGradeId) || gradeRecords[0],
+    [gradeRecords, selectedGradeId],
+  );
+  const attendanceSummary = useMemo(() => {
+    const totals = attendanceRecords.reduce(
+      (accumulator, item) => {
+        accumulator[item.status] = (accumulator[item.status] || 0) + 1;
+        return accumulator;
+      },
+      { Hadir: 0, Izin: 0, Sakit: 0, Alpha: 0 },
+    );
+    return totals;
+  }, [attendanceRecords]);
+  const attendancePercent = useMemo(() => {
+    const total = attendanceRecords.length || 1;
+    return Math.round((attendanceSummary.Hadir / total) * 100);
+  }, [attendanceRecords.length, attendanceSummary.Hadir]);
+  const gradeAverages = useMemo(() => {
+    const grouped = gradeRecords.reduce((accumulator, item) => {
+      const key = item.siswa;
+      const weighted = Number(item.nilai) * (gradeWeights[item.jenis] || 1);
+      if (!accumulator[key]) {
+        accumulator[key] = { total: 0, weight: 0, kelas: item.kelas };
+      }
+      accumulator[key].total += weighted;
+      accumulator[key].weight += gradeWeights[item.jenis] || 1;
+      return accumulator;
+    }, {});
+
+    return Object.entries(grouped)
+      .map(([name, value]) => ({
+        name,
+        kelas: value.kelas,
+        average: Math.round(value.total / value.weight),
+      }))
+      .sort((left, right) => right.average - left.average);
+  }, [gradeRecords]);
+  const gradeRanking = gradeAverages.map((item, index) => ({ ...item, rank: index + 1 }));
+  const gradeGraphValues = gradeAverages.slice(0, 7).map((item) => item.average);
+  const gradeGraphLabels = gradeAverages.slice(0, 7).map((item) => item.name.split(' ')[0]);
 
   const resetStudentForm = () => {
     setStudentEditId(null);
@@ -508,6 +618,16 @@ export default function App() {
   const handleScheduleFormChange = (event) => {
     const { name, value } = event.target;
     setScheduleForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAttendanceFormChange = (event) => {
+    const { name, value } = event.target;
+    setAttendanceForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleGradeFormChange = (event) => {
+    const { name, value } = event.target;
+    setGradeForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleStudentSubmit = (event) => {
@@ -574,6 +694,77 @@ export default function App() {
 
     setScheduleEditId(null);
     setScheduleForm({ jenis: '', target: '', mapel: '', guru: '', waktu: '' });
+  };
+
+  const handleAttendanceSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...attendanceForm };
+
+    if (attendanceEditId) {
+      setAttendanceRecords((prev) => prev.map((item) => (item.id === attendanceEditId ? { ...item, ...payload } : item)));
+      setSelectedAttendanceId(attendanceEditId);
+    } else {
+      const nextId = Date.now();
+      setAttendanceRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedAttendanceId(nextId);
+    }
+
+    setAttendanceEditId(null);
+    setAttendanceForm({ siswa: '', kelas: '', tanggal: '', status: 'Hadir', qr: '' });
+  };
+
+  const handleGradeSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...gradeForm, nilai: Number(gradeForm.nilai) || 0 };
+
+    if (gradeEditId) {
+      setGradeRecords((prev) => prev.map((item) => (item.id === gradeEditId ? { ...item, ...payload } : item)));
+      setSelectedGradeId(gradeEditId);
+    } else {
+      const nextId = Date.now();
+      setGradeRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedGradeId(nextId);
+    }
+
+    setGradeEditId(null);
+    setGradeForm({ siswa: '', kelas: '', mapel: '', jenis: 'Tugas', nilai: '' });
+  };
+
+  const handleAttendanceEdit = (attendance) => {
+    setAttendanceEditId(attendance.id);
+    setAttendanceForm({ siswa: attendance.siswa, kelas: attendance.kelas, tanggal: attendance.tanggal, status: attendance.status, qr: attendance.qr });
+  };
+
+  const handleGradeEdit = (grade) => {
+    setGradeEditId(grade.id);
+    setGradeForm({ siswa: grade.siswa, kelas: grade.kelas, mapel: grade.mapel, jenis: grade.jenis, nilai: String(grade.nilai) });
+  };
+
+  const handleAttendanceDelete = (id) => {
+    setAttendanceRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedAttendanceId((currentId) => (currentId === id ? attendanceSeed[0].id : currentId));
+  };
+
+  const handleGradeDelete = (id) => {
+    setGradeRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedGradeId((currentId) => (currentId === id ? gradeSeed[0].id : currentId));
+  };
+
+  const handleQrScan = () => {
+    if (!scanValue.trim()) {
+      return;
+    }
+
+    const found = attendanceRecords.find((item) => item.qr.toLowerCase() === scanValue.trim().toLowerCase());
+    if (found) {
+      setSelectedAttendanceId(found.id);
+      setAttendanceEditId(found.id);
+      setAttendanceForm(found);
+    }
+  };
+
+  const handleGradeImport = (event) => {
+    setGradeImportName(event.target.files?.[0]?.name || 'Belum ada file');
   };
 
   const handleSubjectEdit = (subject) => {
@@ -1438,6 +1629,143 @@ export default function App() {
           </div>
         </section>
 
+        <section className="glass-card p-4 p-lg-5 mb-4" id="absensi">
+          <SectionTitle
+            eyebrow="Modul Absensi"
+            title="QR code absensi, scan QR, rekap absensi, dan laporan absensi"
+            subtitle="Jenis absensi hadir, izin, sakit, dan alpha dipantau dalam satu alur yang cepat untuk guru dan wali kelas."
+          />
+
+          <div className="row g-4 mt-1">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">QR Code Absensi</p>
+                <h4 className="mb-2">Kode aktif hari ini</h4>
+                <div className="qr-box">
+                  <div className="qr-grid">
+                    {Array.from({ length: 36 }).map((_, index) => (
+                      <span key={`qr-${index}`} className={index % 3 === 0 || index % 5 === 0 ? 'qr-active' : ''} />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-muted mt-3 mb-0">QR digunakan untuk absensi harian agar proses hadir lebih cepat dan akurat.</p>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="module-toolbar mb-3">
+                  <div className="toolbar-meta">
+                    <strong>{filteredAttendance.length} absensi ditemukan</strong>
+                    <span>Hadir {attendanceSummary.Hadir} • Izin {attendanceSummary.Izin} • Sakit {attendanceSummary.Sakit} • Alpha {attendanceSummary.Alpha}</span>
+                  </div>
+                  <div className="toolbar-actions">
+                    <input className="form-control sis-input" type="search" placeholder="Cari absensi" value={attendanceQuery} onChange={(event) => setAttendanceQuery(event.target.value)} />
+                    <input className="form-control sis-input" type="text" placeholder="Scan QR" value={scanValue} onChange={(event) => setScanValue(event.target.value)} />
+                    <button className="btn btn-outline-light" type="button" onClick={handleQrScan}>Scan QR</button>
+                  </div>
+                </div>
+
+                <div className="row g-3 mb-3">
+                  {attendanceTypes.map((type) => (
+                    <div className="col-6 col-lg-3" key={type}>
+                      <div className="metric-card h-100">
+                        <strong>{attendanceSummary[type]}</strong>
+                        <span>{type}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="row g-3">
+                  <div className="col-lg-5">
+                    <div className="detail-card h-100">
+                      <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                        <div>
+                          <p className="eyebrow mb-1">{attendanceEditId ? 'Edit Absensi' : 'Input Absensi'}</p>
+                          <h4 className="mb-0">Form absensi</h4>
+                        </div>
+                        {attendanceEditId ? <span className="chart-badge chart-badge-attendance">Mode edit</span> : null}
+                      </div>
+                      <form className="data-form" onSubmit={handleAttendanceSubmit}>
+                        <div className="row g-3">
+                          {attendanceFormFields.map((field) => (
+                            <div className="col-12" key={field.name}>
+                              <label className="form-label text-light fw-semibold" htmlFor={`attendance-${field.name}`}>{field.label}</label>
+                              {field.type === 'select' ? (
+                                <select className="form-select sis-input" id={`attendance-${field.name}`} name={field.name} value={attendanceForm[field.name]} onChange={handleAttendanceFormChange} required>
+                                  {field.options.map((option) => (
+                                    <option key={option} value={option}>{option}</option>
+                                  ))}
+                                </select>
+                              ) : (
+                                <input className="form-control sis-input" id={`attendance-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={attendanceForm[field.name]} onChange={handleAttendanceFormChange} required />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="d-flex flex-wrap gap-2 mt-3">
+                          <button className="btn btn-primary" type="submit">{attendanceEditId ? 'Simpan Perubahan' : 'Simpan Absensi'}</button>
+                          <button className="btn btn-outline-light" type="button" onClick={() => { setAttendanceEditId(null); setAttendanceForm({ siswa: '', kelas: '', tanggal: '', status: 'Hadir', qr: '' }); }}>Batal</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div className="col-lg-7">
+                    <div className="detail-card h-100">
+                      <div className="table-responsive">
+                        <table className="table table-dark table-hover align-middle data-table mb-0">
+                          <thead>
+                            <tr>
+                              <th>Siswa</th>
+                              <th>Kelas</th>
+                              <th>Status</th>
+                              <th>QR</th>
+                              <th>Aksi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredAttendance.map((attendance) => (
+                              <tr key={attendance.id} className={selectedAttendance?.id === attendance.id ? 'table-active' : ''}>
+                                <td>{attendance.siswa}</td>
+                                <td>{attendance.kelas}</td>
+                                <td>{attendance.status}</td>
+                                <td>{attendance.qr}</td>
+                                <td>
+                                  <div className="table-actions">
+                                    <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedAttendanceId(attendance.id)}>Detail</button>
+                                    <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleAttendanceEdit(attendance)}>Edit</button>
+                                    <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleAttendanceDelete(attendance.id)}>Hapus</button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="detail-grid mt-3">
+                        <div className="detail-card">
+                          <p className="eyebrow mb-1">Detail Absensi</p>
+                          <h4 className="mb-3">{selectedAttendance?.siswa}</h4>
+                          <div className="detail-list">
+                            <div><span>Tanggal</span><strong>{selectedAttendance?.tanggal}</strong></div>
+                            <div><span>Status</span><strong>{selectedAttendance?.status}</strong></div>
+                            <div><span>QR Code</span><strong>{selectedAttendance?.qr}</strong></div>
+                          </div>
+                        </div>
+                        <div className="detail-card">
+                          <p className="eyebrow mb-1">Laporan Absensi</p>
+                          <h4 className="mb-2">Persentase hadir {attendancePercent}%</h4>
+                          <p className="text-muted mb-0">Laporan ini membantu wali kelas dan kepala sekolah memantau kehadiran siswa harian.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="glass-card p-4 p-lg-5 mb-4" id="data-guru">
           <SectionTitle
             eyebrow="Modul Data Guru"
@@ -1538,6 +1866,179 @@ export default function App() {
                     <p className="eyebrow mb-1">Fitur Modul</p>
                     <div className="feature-chip-list">
                       {['CRUD Guru', 'Data Sertifikasi', 'Riwayat Mengajar', 'Jadwal Mengajar', 'Absensi Guru'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="nilai">
+          <SectionTitle
+            eyebrow="Modul Nilai"
+            title="Input nilai, import Excel, perhitungan otomatis, ranking siswa, dan grafik nilai"
+            subtitle="Jenis nilai tugas, UH, UTS, UAS, praktik, dan sikap dikelola dengan bobot perhitungan yang otomatis."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredGrades.length} nilai ditemukan</strong>
+              <span>Import: {gradeImportName} • Ranking otomatis berdasarkan rata-rata tertimbang</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari nilai" value={gradeQuery} onChange={(event) => setGradeQuery(event.target.value)} />
+              <label className="btn btn-outline-light file-button">
+                Import Excel
+                <input type="file" accept=".xlsx,.xls,.csv" onChange={handleGradeImport} hidden />
+              </label>
+              <button className="btn btn-outline-light" type="button" onClick={() => downloadCsv('nilai-siswa.csv', [['Siswa', 'Kelas', 'Mapel', 'Jenis', 'Nilai'], ...filteredGrades.map((item) => [item.siswa, item.kelas, item.mapel, item.jenis, item.nilai])])}>Export Excel</button>
+              <button className="btn btn-outline-light" type="button" onClick={() => window.print()}>Cetak PDF</button>
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                  <div>
+                    <p className="eyebrow mb-1">{gradeEditId ? 'Edit Nilai' : 'Input Nilai'}</p>
+                    <h4 className="mb-0">Form penilaian</h4>
+                  </div>
+                  {gradeEditId ? <span className="chart-badge chart-badge-grades">Mode edit</span> : null}
+                </div>
+                <form className="data-form" onSubmit={handleGradeSubmit}>
+                  <div className="row g-3">
+                    {gradeFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`grade-${field.name}`}>{field.label}</label>
+                        {field.type === 'select' ? (
+                          <select className="form-select sis-input" id={`grade-${field.name}`} name={field.name} value={gradeForm[field.name]} onChange={handleGradeFormChange} required>
+                            {field.options.map((option) => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input className="form-control sis-input" id={`grade-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={gradeForm[field.name]} onChange={handleGradeFormChange} required />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{gradeEditId ? 'Simpan Perubahan' : 'Simpan Nilai'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={() => { setGradeEditId(null); setGradeForm({ siswa: '', kelas: '', mapel: '', jenis: 'Tugas', nilai: '' }); }}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="row g-3 mb-3">
+                  <div className="col-md-3 col-6">
+                    <div className="metric-card h-100">
+                      <strong>{gradeRecords.length}</strong>
+                      <span>Data nilai</span>
+                    </div>
+                  </div>
+                  <div className="col-md-3 col-6">
+                    <div className="metric-card h-100">
+                      <strong>{gradeAverages[0]?.name || '-'}</strong>
+                      <span>Peringkat 1</span>
+                    </div>
+                  </div>
+                  <div className="col-md-3 col-6">
+                    <div className="metric-card h-100">
+                      <strong>{gradeAverages[0]?.average || 0}</strong>
+                      <span>Rata-rata tertinggi</span>
+                    </div>
+                  </div>
+                  <div className="col-md-3 col-6">
+                    <div className="metric-card h-100">
+                      <strong>{gradeTypes.length}</strong>
+                      <span>Jenis nilai</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row g-3 mb-3">
+                  <div className="col-lg-6">
+                    <BarChart
+                      title="Grafik Nilai"
+                      subtitle="Rata-rata tertimbang siswa teratas."
+                      labels={gradeGraphLabels.length ? gradeGraphLabels : chartLabels}
+                      values={gradeGraphValues.length ? gradeGraphValues : gradeTrend}
+                      tone="grades"
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <div className="detail-card h-100">
+                      <p className="eyebrow mb-1">Ranking Siswa</p>
+                      <h4 className="mb-3">Perhitungan otomatis</h4>
+                      <div className="ranking-list">
+                        {gradeRanking.map((item) => (
+                          <div className="ranking-item" key={item.name}>
+                            <div className="ranking-number">#{item.rank}</div>
+                            <div>
+                              <strong>{item.name}</strong>
+                              <p>{item.kelas} • Rata-rata {item.average}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Siswa</th>
+                        <th>Kelas</th>
+                        <th>Mapel</th>
+                        <th>Jenis Nilai</th>
+                        <th>Nilai</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredGrades.map((grade) => (
+                        <tr key={grade.id} className={selectedGrade?.id === grade.id ? 'table-active' : ''}>
+                          <td>{grade.siswa}</td>
+                          <td>{grade.kelas}</td>
+                          <td>{grade.mapel}</td>
+                          <td>{grade.jenis}</td>
+                          <td>{grade.nilai}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedGradeId(grade.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleGradeEdit(grade)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleGradeDelete(grade.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Detail Nilai</p>
+                    <h4 className="mb-3">{selectedGrade?.siswa}</h4>
+                    <div className="detail-list">
+                      <div><span>Mata Pelajaran</span><strong>{selectedGrade?.mapel}</strong></div>
+                      <div><span>Jenis Nilai</span><strong>{selectedGrade?.jenis}</strong></div>
+                      <div><span>Nilai</span><strong>{selectedGrade?.nilai}</strong></div>
+                      <div><span>Perhitungan Otomatis</span><strong>{gradeWeights[selectedGrade?.jenis] || 1}% bobot</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Jenis Nilai</p>
+                    <div className="feature-chip-list">
+                      {gradeTypes.map((feature) => (
                         <span className="feature-chip" key={feature}>{feature}</span>
                       ))}
                     </div>
