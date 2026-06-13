@@ -284,6 +284,75 @@ const libraryBooks = [
   { id: 4, judul: 'Kamus Bahasa Inggris', penulis: 'Pusat Bahasa', barcode: 'BK-004', stok: 10, pinjam: 2, denda: 'Rp 5.000' },
 ];
 
+const assetSeed = [
+  { id: 1, kategori: 'Inventaris', nama: 'Proyektor Smartboard', lokasi: 'Ruang Multimedia', jumlah: 4, kondisi: 'Baik' },
+  { id: 2, kategori: 'Ruangan', nama: 'XI IPA 1', lokasi: 'Gedung A Lantai 2', jumlah: 36, kondisi: 'Aktif' },
+  { id: 3, kategori: 'Laboratorium', nama: 'Lab Fisika', lokasi: 'Gedung B', jumlah: 24, kondisi: 'Siap pakai' },
+  { id: 4, kategori: 'Peralatan Sekolah', nama: 'Microphone Portable', lokasi: 'Ruang Kesiswaan', jumlah: 2, kondisi: 'Baik' },
+];
+
+const alumniSeed = [
+  { id: 1, nama: 'Andi Pratama', tahunLulus: '2023', pekerjaan: 'Mahasiswa Teknik', tracer: 'Melanjutkan kuliah', jejaring: 'Aktif di forum alumni' },
+  { id: 2, nama: 'Siti Aulia', tahunLulus: '2022', pekerjaan: 'Staf Administrasi', tracer: 'Bekerja', jejaring: 'Mentor PPDB' },
+  { id: 3, nama: 'Raka Wijaya', tahunLulus: '2021', pekerjaan: 'Freelance Desain', tracer: 'Wirausaha', jejaring: 'Pengisi webinar karier' },
+];
+
+const newsSeed = [
+  { id: 1, jenis: 'Artikel Sekolah', judul: 'Strategi Belajar Efektif di Semester Baru', media: 'Teks', status: 'Tayang' },
+  { id: 2, jenis: 'Berita Kegiatan', judul: 'Lomba Inovasi Siswa Tingkat Kota', media: 'Foto', status: 'Tayang' },
+  { id: 3, jenis: 'Prestasi Siswa', judul: 'Tim Debat Raih Juara 1', media: 'Video', status: 'Sorotan' },
+  { id: 4, jenis: 'Galeri Foto', judul: 'Kegiatan Pramuka Semester Gasal', media: 'Galeri', status: 'Tersimpan' },
+];
+
+const announcementSeed = [
+  { id: 1, target: 'Umum', judul: 'Libur Nasional', isi: 'Sekolah libur pada tanggal 17 Agustus.', status: 'Aktif' },
+  { id: 2, target: 'Kelas', judul: 'Ulangan Harian XI IPA 1', isi: 'Ulangan Matematika pada Jumat pukul 08.00.', status: 'Aktif' },
+  { id: 3, target: 'PPDB', judul: 'Pengumuman Seleksi', isi: 'Hasil seleksi gelombang 1 diumumkan hari ini.', status: 'Penting' },
+];
+
+const chatSeed = [
+  { id: 1, channel: 'Guru-Siswa', pengirim: 'Guru Matematika', pesan: 'Tugas dikumpulkan sebelum jam 16.00.', status: 'Realtime' },
+  { id: 2, channel: 'Orang Tua-Guru', pengirim: 'Wali Kelas', pesan: 'Mohon cek absensi siswa hari ini.', status: 'Email dikirim' },
+  { id: 3, channel: 'Notifikasi', pengirim: 'Sistem', pesan: 'WhatsApp gateway aktif untuk pengingat pembayaran.', status: 'Terkirim' },
+];
+
+const assetFormFields = [
+  { name: 'kategori', label: 'Kategori', type: 'text', placeholder: 'Inventaris / Ruangan / Laboratorium / Peralatan Sekolah' },
+  { name: 'nama', label: 'Nama Aset', type: 'text', placeholder: 'Nama aset' },
+  { name: 'lokasi', label: 'Lokasi', type: 'text', placeholder: 'Lokasi aset' },
+  { name: 'jumlah', label: 'Jumlah', type: 'number', placeholder: '0' },
+  { name: 'kondisi', label: 'Kondisi', type: 'text', placeholder: 'Baik / Rusak / Aktif' },
+];
+
+const alumniFormFields = [
+  { name: 'nama', label: 'Nama Alumni', type: 'text', placeholder: 'Nama alumni' },
+  { name: 'tahunLulus', label: 'Tahun Lulus', type: 'text', placeholder: '2023' },
+  { name: 'pekerjaan', label: 'Pekerjaan / Pendidikan', type: 'text', placeholder: 'Profesi atau pendidikan lanjutan' },
+  { name: 'tracer', label: 'Tracer Study', type: 'text', placeholder: 'Status tracer study' },
+  { name: 'jejaring', label: 'Jejaring Alumni', type: 'text', placeholder: 'Status jejaring' },
+];
+
+const newsFormFields = [
+  { name: 'jenis', label: 'Jenis Konten', type: 'text', placeholder: 'Artikel Sekolah / Berita Kegiatan / Prestasi Siswa / Galeri Foto / Video Sekolah' },
+  { name: 'judul', label: 'Judul', type: 'text', placeholder: 'Judul berita' },
+  { name: 'media', label: 'Media', type: 'text', placeholder: 'Teks / Foto / Video / Galeri' },
+  { name: 'status', label: 'Status', type: 'text', placeholder: 'Tayang / Sorotan / Arsip' },
+];
+
+const announcementFormFields = [
+  { name: 'target', label: 'Target', type: 'text', placeholder: 'Umum / Kelas / PPDB' },
+  { name: 'judul', label: 'Judul Pengumuman', type: 'text', placeholder: 'Judul pengumuman' },
+  { name: 'isi', label: 'Isi', type: 'textarea', placeholder: 'Isi pengumuman' },
+  { name: 'status', label: 'Status', type: 'text', placeholder: 'Aktif / Penting / Arsip' },
+];
+
+const chatFormFields = [
+  { name: 'channel', label: 'Channel', type: 'text', placeholder: 'Guru-Siswa / Orang Tua-Guru / Notifikasi' },
+  { name: 'pengirim', label: 'Pengirim', type: 'text', placeholder: 'Nama pengirim' },
+  { name: 'pesan', label: 'Pesan', type: 'textarea', placeholder: 'Tulis pesan' },
+  { name: 'status', label: 'Status', type: 'text', placeholder: 'Realtime / Email dikirim / Terkirim' },
+];
+
 const attendanceFormFields = [
   { name: 'siswa', label: 'Nama Siswa', type: 'text', placeholder: 'Nama siswa' },
   { name: 'kelas', label: 'Kelas', type: 'text', placeholder: 'Contoh: XI IPA 1' },
@@ -515,23 +584,48 @@ export default function App() {
   const [scheduleRecords, setScheduleRecords] = useState(scheduleSeed);
   const [attendanceRecords, setAttendanceRecords] = useState(attendanceSeed);
   const [gradeRecords, setGradeRecords] = useState(gradeSeed);
+  const [assetRecords, setAssetRecords] = useState(assetSeed);
+  const [alumniRecords, setAlumniRecords] = useState(alumniSeed);
+  const [newsRecords, setNewsRecords] = useState(newsSeed);
+  const [announcementRecords, setAnnouncementRecords] = useState(announcementSeed);
+  const [chatRecords, setChatRecords] = useState(chatSeed);
   const [subjectQuery, setSubjectQuery] = useState('');
   const [scheduleQuery, setScheduleQuery] = useState('');
   const [attendanceQuery, setAttendanceQuery] = useState('');
   const [gradeQuery, setGradeQuery] = useState('');
+  const [assetQuery, setAssetQuery] = useState('');
+  const [alumniQuery, setAlumniQuery] = useState('');
+  const [newsQuery, setNewsQuery] = useState('');
+  const [announcementQuery, setAnnouncementQuery] = useState('');
+  const [chatQuery, setChatQuery] = useState('');
   const [gradeImportName, setGradeImportName] = useState('Belum ada file');
   const [selectedSubjectId, setSelectedSubjectId] = useState(subjectSeed[0].id);
   const [selectedScheduleId, setSelectedScheduleId] = useState(scheduleSeed[0].id);
   const [selectedAttendanceId, setSelectedAttendanceId] = useState(attendanceSeed[0].id);
   const [selectedGradeId, setSelectedGradeId] = useState(gradeSeed[0].id);
+  const [selectedAssetId, setSelectedAssetId] = useState(assetSeed[0].id);
+  const [selectedAlumniId, setSelectedAlumniId] = useState(alumniSeed[0].id);
+  const [selectedNewsId, setSelectedNewsId] = useState(newsSeed[0].id);
+  const [selectedAnnouncementId, setSelectedAnnouncementId] = useState(announcementSeed[0].id);
+  const [selectedChatId, setSelectedChatId] = useState(chatSeed[0].id);
   const [subjectEditId, setSubjectEditId] = useState(null);
   const [scheduleEditId, setScheduleEditId] = useState(null);
   const [attendanceEditId, setAttendanceEditId] = useState(null);
   const [gradeEditId, setGradeEditId] = useState(null);
+  const [assetEditId, setAssetEditId] = useState(null);
+  const [alumniEditId, setAlumniEditId] = useState(null);
+  const [newsEditId, setNewsEditId] = useState(null);
+  const [announcementEditId, setAnnouncementEditId] = useState(null);
+  const [chatEditId, setChatEditId] = useState(null);
   const [subjectForm, setSubjectForm] = useState({ nama: '', kelompok: '', guruPengampu: '', kkm: '' });
   const [scheduleForm, setScheduleForm] = useState({ jenis: '', target: '', mapel: '', guru: '', waktu: '' });
   const [attendanceForm, setAttendanceForm] = useState({ siswa: '', kelas: '', tanggal: '', status: 'Hadir', qr: '' });
   const [gradeForm, setGradeForm] = useState({ siswa: '', kelas: '', mapel: '', jenis: 'Tugas', nilai: '' });
+  const [assetForm, setAssetForm] = useState({ kategori: '', nama: '', lokasi: '', jumlah: '', kondisi: '' });
+  const [alumniForm, setAlumniForm] = useState({ nama: '', tahunLulus: '', pekerjaan: '', tracer: '', jejaring: '' });
+  const [newsForm, setNewsForm] = useState({ jenis: '', judul: '', media: '', status: '' });
+  const [announcementForm, setAnnouncementForm] = useState({ target: '', judul: '', isi: '', status: '' });
+  const [chatForm, setChatForm] = useState({ channel: 'Guru-Siswa', pengirim: '', pesan: '', status: 'Realtime' });
   const [scanValue, setScanValue] = useState('');
   const [studentForm, setStudentForm] = useState({
     nis: '',
@@ -644,6 +738,31 @@ export default function App() {
   const gradeRanking = gradeAverages.map((item, index) => ({ ...item, rank: index + 1 }));
   const gradeGraphValues = gradeAverages.slice(0, 7).map((item) => item.average);
   const gradeGraphLabels = gradeAverages.slice(0, 7).map((item) => item.name.split(' ')[0]);
+  const filteredAssets = useMemo(
+    () => assetRecords.filter((item) => [item.kategori, item.nama, item.lokasi, item.kondisi].join(' ').toLowerCase().includes(assetQuery.toLowerCase())),
+    [assetRecords, assetQuery],
+  );
+  const filteredAlumni = useMemo(
+    () => alumniRecords.filter((item) => [item.nama, item.tahunLulus, item.pekerjaan, item.tracer, item.jejaring].join(' ').toLowerCase().includes(alumniQuery.toLowerCase())),
+    [alumniRecords, alumniQuery],
+  );
+  const filteredNews = useMemo(
+    () => newsRecords.filter((item) => [item.jenis, item.judul, item.media, item.status].join(' ').toLowerCase().includes(newsQuery.toLowerCase())),
+    [newsRecords, newsQuery],
+  );
+  const filteredAnnouncements = useMemo(
+    () => announcementRecords.filter((item) => [item.target, item.judul, item.isi, item.status].join(' ').toLowerCase().includes(announcementQuery.toLowerCase())),
+    [announcementRecords, announcementQuery],
+  );
+  const filteredChats = useMemo(
+    () => chatRecords.filter((item) => [item.channel, item.pengirim, item.pesan, item.status].join(' ').toLowerCase().includes(chatQuery.toLowerCase())),
+    [chatRecords, chatQuery],
+  );
+  const selectedAsset = useMemo(() => assetRecords.find((item) => item.id === selectedAssetId) || assetRecords[0], [assetRecords, selectedAssetId]);
+  const selectedAlumni = useMemo(() => alumniRecords.find((item) => item.id === selectedAlumniId) || alumniRecords[0], [alumniRecords, selectedAlumniId]);
+  const selectedNews = useMemo(() => newsRecords.find((item) => item.id === selectedNewsId) || newsRecords[0], [newsRecords, selectedNewsId]);
+  const selectedAnnouncement = useMemo(() => announcementRecords.find((item) => item.id === selectedAnnouncementId) || announcementRecords[0], [announcementRecords, selectedAnnouncementId]);
+  const selectedChat = useMemo(() => chatRecords.find((item) => item.id === selectedChatId) || chatRecords[0], [chatRecords, selectedChatId]);
   const reportPreview = useMemo(() => {
     const studentGrades = gradeRecords.filter((item) => item.siswa === selectedStudent?.nama);
     const average = studentGrades.length ? Math.round(studentGrades.reduce((sum, item) => sum + Number(item.nilai || 0), 0) / studentGrades.length) : gradeAverages[0]?.average || 0;
@@ -703,6 +822,31 @@ export default function App() {
   const handleGradeFormChange = (event) => {
     const { name, value } = event.target;
     setGradeForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAssetFormChange = (event) => {
+    const { name, value } = event.target;
+    setAssetForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAlumniFormChange = (event) => {
+    const { name, value } = event.target;
+    setAlumniForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleNewsFormChange = (event) => {
+    const { name, value } = event.target;
+    setNewsForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAnnouncementFormChange = (event) => {
+    const { name, value } = event.target;
+    setAnnouncementForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleChatFormChange = (event) => {
+    const { name, value } = event.target;
+    setChatForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleStudentSubmit = (event) => {
@@ -803,6 +947,140 @@ export default function App() {
 
     setGradeEditId(null);
     setGradeForm({ siswa: '', kelas: '', mapel: '', jenis: 'Tugas', nilai: '' });
+  };
+
+  const handleAssetSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...assetForm, jumlah: Number(assetForm.jumlah) || 0 };
+
+    if (assetEditId) {
+      setAssetRecords((prev) => prev.map((item) => (item.id === assetEditId ? { ...item, ...payload } : item)));
+      setSelectedAssetId(assetEditId);
+    } else {
+      const nextId = Date.now();
+      setAssetRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedAssetId(nextId);
+    }
+
+    setAssetEditId(null);
+    setAssetForm({ kategori: '', nama: '', lokasi: '', jumlah: '', kondisi: '' });
+  };
+
+  const handleAlumniSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...alumniForm };
+
+    if (alumniEditId) {
+      setAlumniRecords((prev) => prev.map((item) => (item.id === alumniEditId ? { ...item, ...payload } : item)));
+      setSelectedAlumniId(alumniEditId);
+    } else {
+      const nextId = Date.now();
+      setAlumniRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedAlumniId(nextId);
+    }
+
+    setAlumniEditId(null);
+    setAlumniForm({ nama: '', tahunLulus: '', pekerjaan: '', tracer: '', jejaring: '' });
+  };
+
+  const handleNewsSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...newsForm };
+
+    if (newsEditId) {
+      setNewsRecords((prev) => prev.map((item) => (item.id === newsEditId ? { ...item, ...payload } : item)));
+      setSelectedNewsId(newsEditId);
+    } else {
+      const nextId = Date.now();
+      setNewsRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedNewsId(nextId);
+    }
+
+    setNewsEditId(null);
+    setNewsForm({ jenis: '', judul: '', media: '', status: '' });
+  };
+
+  const handleAnnouncementSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...announcementForm };
+
+    if (announcementEditId) {
+      setAnnouncementRecords((prev) => prev.map((item) => (item.id === announcementEditId ? { ...item, ...payload } : item)));
+      setSelectedAnnouncementId(announcementEditId);
+    } else {
+      const nextId = Date.now();
+      setAnnouncementRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedAnnouncementId(nextId);
+    }
+
+    setAnnouncementEditId(null);
+    setAnnouncementForm({ target: '', judul: '', isi: '', status: '' });
+  };
+
+  const handleChatSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...chatForm };
+    const nextId = Date.now();
+    setChatRecords((prev) => [...prev, { id: nextId, ...payload }]);
+    setSelectedChatId(nextId);
+    setChatForm((prev) => ({ ...prev, pesan: '' }));
+  };
+
+  const handleAssetEdit = (asset) => {
+    setAssetEditId(asset.id);
+    setAssetForm({ kategori: asset.kategori, nama: asset.nama, lokasi: asset.lokasi, jumlah: String(asset.jumlah), kondisi: asset.kondisi });
+  };
+
+  const handleAlumniEdit = (alumni) => {
+    setAlumniEditId(alumni.id);
+    setAlumniForm({ nama: alumni.nama, tahunLulus: alumni.tahunLulus, pekerjaan: alumni.pekerjaan, tracer: alumni.tracer, jejaring: alumni.jejaring });
+  };
+
+  const handleNewsEdit = (news) => {
+    setNewsEditId(news.id);
+    setNewsForm({ jenis: news.jenis, judul: news.judul, media: news.media, status: news.status });
+  };
+
+  const handleAnnouncementEdit = (item) => {
+    setAnnouncementEditId(item.id);
+    setAnnouncementForm({ target: item.target, judul: item.judul, isi: item.isi, status: item.status });
+  };
+
+  const handleChatPick = (message) => {
+    setSelectedChatId(message.id);
+  };
+
+  const handleSchoolReportExport = () => {
+    const rows = [
+      ['Kategori', 'Nama', 'Nilai', 'Keterangan'],
+      ...studentRecords.map((item) => ['Data Siswa', item.nama, item.kelas, item.jurusan]),
+      ...teacherRecords.map((item) => ['Data Guru', item.nama, item.mapel, item.absensi]),
+      ...gradeRecords.map((item) => ['Nilai', item.siswa, item.mapel, `${item.jenis} = ${item.nilai}`]),
+      ...attendanceRecords.map((item) => ['Absensi', item.siswa, item.tanggal, item.status]),
+      ...alumniRecords.map((item) => ['Alumni', item.nama, item.tahunLulus, item.pekerjaan]),
+      ...announcementRecords.map((item) => ['PPDB/Pengumuman', item.judul, item.target, item.status]),
+    ];
+    downloadCsv('laporan-siswa-sekolah.csv', rows);
+  };
+
+  const handleAssetDelete = (id) => {
+    setAssetRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedAssetId((currentId) => (currentId === id ? assetSeed[0].id : currentId));
+  };
+
+  const handleAlumniDelete = (id) => {
+    setAlumniRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedAlumniId((currentId) => (currentId === id ? alumniSeed[0].id : currentId));
+  };
+
+  const handleNewsDelete = (id) => {
+    setNewsRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedNewsId((currentId) => (currentId === id ? newsSeed[0].id : currentId));
+  };
+
+  const handleAnnouncementDelete = (id) => {
+    setAnnouncementRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedAnnouncementId((currentId) => (currentId === id ? announcementSeed[0].id : currentId));
   };
 
   const handleAttendanceEdit = (attendance) => {
@@ -2414,6 +2692,511 @@ export default function App() {
                     </tbody>
                   </table>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="sarana-prasarana">
+          <SectionTitle
+            eyebrow="Modul Sarana dan Prasarana"
+            title="Inventaris, ruangan, laboratorium, dan peralatan sekolah"
+            subtitle="Semua aset sekolah dicatat agar mudah dipantau, diperbarui, dan dilaporkan ke manajemen sekolah."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredAssets.length} aset ditemukan</strong>
+              <span>Inventaris • Ruangan • Laboratorium • Peralatan sekolah</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari aset" value={assetQuery} onChange={(event) => setAssetQuery(event.target.value)} />
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                  <div>
+                    <p className="eyebrow mb-1">{assetEditId ? 'Edit Aset' : 'Tambah Aset'}</p>
+                    <h4 className="mb-0">Form inventaris</h4>
+                  </div>
+                </div>
+                <form className="data-form" onSubmit={handleAssetSubmit}>
+                  <div className="row g-3">
+                    {assetFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`asset-${field.name}`}>{field.label}</label>
+                        {field.type === 'textarea' ? (
+                          <textarea className="form-control sis-input" id={`asset-${field.name}`} name={field.name} rows="2" placeholder={field.placeholder} value={assetForm[field.name]} onChange={handleAssetFormChange} required />
+                        ) : (
+                          <input className="form-control sis-input" id={`asset-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={assetForm[field.name]} onChange={handleAssetFormChange} required />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{assetEditId ? 'Simpan Perubahan' : 'Simpan Aset'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={() => { setAssetEditId(null); setAssetForm({ kategori: '', nama: '', lokasi: '', jumlah: '', kondisi: '' }); }}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Kategori</th>
+                        <th>Nama</th>
+                        <th>Lokasi</th>
+                        <th>Jumlah</th>
+                        <th>Kondisi</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredAssets.map((asset) => (
+                        <tr key={asset.id} className={selectedAsset?.id === asset.id ? 'table-active' : ''}>
+                          <td>{asset.kategori}</td>
+                          <td>{asset.nama}</td>
+                          <td>{asset.lokasi}</td>
+                          <td>{asset.jumlah}</td>
+                          <td>{asset.kondisi}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedAssetId(asset.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleAssetEdit(asset)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleAssetDelete(asset.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Detail Aset</p>
+                    <h4 className="mb-3">{selectedAsset?.nama}</h4>
+                    <div className="detail-list">
+                      <div><span>Kategori</span><strong>{selectedAsset?.kategori}</strong></div>
+                      <div><span>Lokasi</span><strong>{selectedAsset?.lokasi}</strong></div>
+                      <div><span>Jumlah</span><strong>{selectedAsset?.jumlah}</strong></div>
+                      <div><span>Kondisi</span><strong>{selectedAsset?.kondisi}</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Fokus Modul</p>
+                    <div className="feature-chip-list">
+                      {['Inventaris', 'Ruangan', 'Laboratorium', 'Peralatan sekolah'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="alumni">
+          <SectionTitle
+            eyebrow="Modul Alumni"
+            title="Database alumni, tracer study, lowongan kerja, dan jejaring alumni"
+            subtitle="Riwayat alumni dapat dipantau untuk tracer study, peluang kerja, dan koneksi jejaring yang aktif."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredAlumni.length} alumni ditemukan</strong>
+              <span>Tracer study • Lowongan kerja • Jejaring alumni</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari alumni" value={alumniQuery} onChange={(event) => setAlumniQuery(event.target.value)} />
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">{alumniEditId ? 'Edit Alumni' : 'Tambah Alumni'}</p>
+                <h4 className="mb-3">Form alumni</h4>
+                <form className="data-form" onSubmit={handleAlumniSubmit}>
+                  <div className="row g-3">
+                    {alumniFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`alumni-${field.name}`}>{field.label}</label>
+                        <input className="form-control sis-input" id={`alumni-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={alumniForm[field.name]} onChange={handleAlumniFormChange} required />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{alumniEditId ? 'Simpan Perubahan' : 'Simpan Alumni'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={() => { setAlumniEditId(null); setAlumniForm({ nama: '', tahunLulus: '', pekerjaan: '', tracer: '', jejaring: '' }); }}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Nama</th>
+                        <th>Tahun Lulus</th>
+                        <th>Pekerjaan</th>
+                        <th>Tracer</th>
+                        <th>Jejaring</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredAlumni.map((alumni) => (
+                        <tr key={alumni.id} className={selectedAlumni?.id === alumni.id ? 'table-active' : ''}>
+                          <td>{alumni.nama}</td>
+                          <td>{alumni.tahunLulus}</td>
+                          <td>{alumni.pekerjaan}</td>
+                          <td>{alumni.tracer}</td>
+                          <td>{alumni.jejaring}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedAlumniId(alumni.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleAlumniEdit(alumni)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleAlumniDelete(alumni.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="berita-informasi">
+          <SectionTitle
+            eyebrow="Modul Berita dan Informasi"
+            title="Artikel sekolah, berita kegiatan, prestasi siswa, galeri foto, dan video sekolah"
+            subtitle="Konten informasi sekolah dapat dipublikasikan, diarsipkan, dan ditandai sebagai sorotan untuk publikasi cepat."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredNews.length} konten ditemukan</strong>
+              <span>Artikel • Kegiatan • Prestasi • Galeri • Video</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari berita" value={newsQuery} onChange={(event) => setNewsQuery(event.target.value)} />
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">{newsEditId ? 'Edit Konten' : 'Tambah Konten'}</p>
+                <h4 className="mb-3">Form berita</h4>
+                <form className="data-form" onSubmit={handleNewsSubmit}>
+                  <div className="row g-3">
+                    {newsFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`news-${field.name}`}>{field.label}</label>
+                        <input className="form-control sis-input" id={`news-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={newsForm[field.name]} onChange={handleNewsFormChange} required />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{newsEditId ? 'Simpan Perubahan' : 'Publikasikan'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={() => { setNewsEditId(null); setNewsForm({ jenis: '', judul: '', media: '', status: '' }); }}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Jenis</th>
+                        <th>Judul</th>
+                        <th>Media</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredNews.map((news) => (
+                        <tr key={news.id} className={selectedNews?.id === news.id ? 'table-active' : ''}>
+                          <td>{news.jenis}</td>
+                          <td>{news.judul}</td>
+                          <td>{news.media}</td>
+                          <td>{news.status}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedNewsId(news.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleNewsEdit(news)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleNewsDelete(news.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Detail Konten</p>
+                    <h4 className="mb-3">{selectedNews?.judul}</h4>
+                    <div className="detail-list">
+                      <div><span>Jenis</span><strong>{selectedNews?.jenis}</strong></div>
+                      <div><span>Media</span><strong>{selectedNews?.media}</strong></div>
+                      <div><span>Status</span><strong>{selectedNews?.status}</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Kategori</p>
+                    <div className="feature-chip-list">
+                      {['Artikel sekolah', 'Berita kegiatan', 'Prestasi siswa', 'Galeri foto', 'Video sekolah'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="pengumuman">
+          <SectionTitle
+            eyebrow="Modul Pengumuman"
+            title="Pengumuman umum, pengumuman kelas, dan pengumuman PPDB"
+            subtitle="Pusat distribusi informasi sekolah untuk publik, kelas, dan calon peserta didik."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredAnnouncements.length} pengumuman ditemukan</strong>
+              <span>Umum • Kelas • PPDB</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari pengumuman" value={announcementQuery} onChange={(event) => setAnnouncementQuery(event.target.value)} />
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">{announcementEditId ? 'Edit Pengumuman' : 'Tambah Pengumuman'}</p>
+                <h4 className="mb-3">Form pengumuman</h4>
+                <form className="data-form" onSubmit={handleAnnouncementSubmit}>
+                  <div className="row g-3">
+                    {announcementFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`announcement-${field.name}`}>{field.label}</label>
+                        {field.type === 'textarea' ? (
+                          <textarea className="form-control sis-input" id={`announcement-${field.name}`} name={field.name} rows="3" placeholder={field.placeholder} value={announcementForm[field.name]} onChange={handleAnnouncementFormChange} required />
+                        ) : (
+                          <input className="form-control sis-input" id={`announcement-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={announcementForm[field.name]} onChange={handleAnnouncementFormChange} required />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{announcementEditId ? 'Simpan Perubahan' : 'Publikasikan'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={() => { setAnnouncementEditId(null); setAnnouncementForm({ target: '', judul: '', isi: '', status: '' }); }}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Target</th>
+                        <th>Judul</th>
+                        <th>Isi</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredAnnouncements.map((item) => (
+                        <tr key={item.id} className={selectedAnnouncement?.id === item.id ? 'table-active' : ''}>
+                          <td>{item.target}</td>
+                          <td>{item.judul}</td>
+                          <td>{item.isi}</td>
+                          <td>{item.status}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedAnnouncementId(item.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleAnnouncementEdit(item)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleAnnouncementDelete(item.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="chat-notifikasi">
+          <SectionTitle
+            eyebrow="Modul Chat dan Notifikasi"
+            title="Chat guru-siswa, chat orang tua-guru, notifikasi real-time, email, dan WhatsApp"
+            subtitle="Pesan sekolah terpusat agar komunikasi cepat, terukur, dan mudah dilacak oleh wali kelas maupun orang tua."
+          />
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">Kirim Pesan</p>
+                <h4 className="mb-3">Form chat</h4>
+                <form className="data-form" onSubmit={handleChatSubmit}>
+                  <div className="row g-3">
+                    {chatFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`chat-${field.name}`}>{field.label}</label>
+                        {field.type === 'textarea' ? (
+                          <textarea className="form-control sis-input" id={`chat-${field.name}`} name={field.name} rows="3" placeholder={field.placeholder} value={chatForm[field.name]} onChange={handleChatFormChange} required />
+                        ) : (
+                          <input className="form-control sis-input" id={`chat-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={chatForm[field.name]} onChange={handleChatFormChange} required />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">Kirim Pesan</button>
+                  </div>
+                </form>
+                <hr className="border-secondary" />
+                <p className="eyebrow mb-1">Notifikasi Aktif</p>
+                <div className="feature-chip-list">
+                  {['Notifikasi Real-Time', 'Email Notification', 'WhatsApp Gateway'].map((feature) => (
+                    <span className="feature-chip" key={feature}>{feature}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Channel</th>
+                        <th>Pengirim</th>
+                        <th>Pesan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredChats.map((message) => (
+                        <tr key={message.id} className={selectedChat?.id === message.id ? 'table-active' : ''}>
+                          <td>{message.channel}</td>
+                          <td>{message.pengirim}</td>
+                          <td>{message.pesan}</td>
+                          <td>{message.status}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleChatPick(message)}>Detail</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Pesan Terpilih</p>
+                    <h4 className="mb-3">{selectedChat?.channel}</h4>
+                    <div className="detail-list">
+                      <div><span>Pengirim</span><strong>{selectedChat?.pengirim}</strong></div>
+                      <div><span>Pesan</span><strong>{selectedChat?.pesan}</strong></div>
+                      <div><span>Status</span><strong>{selectedChat?.status}</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Fitur Komunikasi</p>
+                    <div className="feature-chip-list">
+                      {['Chat Guru-Siswa', 'Chat Orang Tua-Guru', 'Real-Time', 'Email', 'WhatsApp Gateway'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="laporan">
+          <SectionTitle
+            eyebrow="Modul Laporan"
+            title="Laporan data siswa, guru, nilai, absensi, PPDB, keuangan, dan alumni"
+            subtitle="Semua ringkasan dapat diekspor ke PDF, Excel, atau dicetak langsung dari dashboard."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>Laporan terpadu siap ekspor</strong>
+              <span>PDF • Excel • Print</span>
+            </div>
+            <div className="toolbar-actions">
+              <button className="btn btn-outline-light" type="button" onClick={handleSchoolReportExport}>Export Excel</button>
+              <button className="btn btn-outline-light" type="button" onClick={() => window.print()}>Cetak PDF</button>
+              <button className="btn btn-outline-light" type="button" onClick={handleSchoolReportExport}>Download Laporan</button>
+            </div>
+          </div>
+
+          <div className="row g-3 mt-2">
+            {[
+              ['Data siswa', studentRecords.length],
+              ['Data guru', teacherRecords.length],
+              ['Nilai', gradeRecords.length],
+              ['Absensi', attendanceRecords.length],
+              ['PPDB', submission ? 1 : 0],
+              ['Keuangan', financeRecords.length],
+              ['Alumni', alumniRecords.length],
+            ].map(([label, value]) => (
+              <div className="col-md-3 col-6" key={label}>
+                <div className="metric-card h-100">
+                  <strong>{value}</strong>
+                  <span>{label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="detail-grid mt-4">
+            <div className="detail-card">
+              <p className="eyebrow mb-1">Isi Laporan</p>
+              <div className="feature-chip-list">
+                {['Data siswa', 'Data guru', 'Nilai', 'Absensi', 'PPDB', 'Keuangan', 'Alumni'].map((feature) => (
+                  <span className="feature-chip" key={feature}>{feature}</span>
+                ))}
+              </div>
+            </div>
+            <div className="detail-card">
+              <p className="eyebrow mb-1">Output</p>
+              <div className="feature-chip-list">
+                {['PDF', 'Excel', 'Print'].map((feature) => (
+                  <span className="feature-chip" key={feature}>{feature}</span>
+                ))}
               </div>
             </div>
           </div>
