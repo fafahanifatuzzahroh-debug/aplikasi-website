@@ -427,6 +427,35 @@ a {
   font-weight: 700;
 }
 
+.major-card {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(157, 183, 212, 0.12);
+}
+
+.major-card strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.major-card span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.class-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.compact-item {
+  align-items: flex-start;
+}
+
 .module-toolbar {
   display: flex;
   justify-content: space-between;

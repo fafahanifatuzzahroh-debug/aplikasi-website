@@ -51,6 +51,19 @@ const teachers = [
   },
 ];
 
+const classes = [
+  { id: 1, name: 'X IPA 1', major: 'IPA', waliKelas: 'Siti Rahmawati, S.Pd', capacity: 36, distribution: '12 siswa PPDB, 24 siswa naik kelas' },
+  { id: 2, name: 'X IPA 2', major: 'IPA', waliKelas: 'Dedi Kusnadi, S.Pd', capacity: 36, distribution: '11 siswa PPDB, 25 siswa pindahan' },
+  { id: 3, name: 'XI IPS 1', major: 'IPS', waliKelas: 'Maya Lestari, M.Pd', capacity: 36, distribution: '36 siswa aktif' },
+  { id: 4, name: 'XII Bahasa', major: 'Bahasa', waliKelas: 'Nina Marlina, S.Pd', capacity: 32, distribution: '32 siswa aktif' },
+];
+
+const majors = [
+  { id: 1, name: 'IPA', description: 'Fokus pada sains, eksperimen, dan analisis numerik.' },
+  { id: 2, name: 'IPS', description: 'Fokus pada ekonomi, sosial, geografi, dan sejarah.' },
+  { id: 3, name: 'Bahasa', description: 'Fokus pada literasi, komunikasi, dan bahasa asing.' },
+];
+
 const parseBody = (req) => req.body ?? {};
 
 router.get('/dashboard', authenticateToken, (req, res) => {
@@ -138,6 +151,78 @@ router.delete('/teachers/:id', authenticateToken, authorizeRoles('superadmin', '
 
   const removed = teachers.splice(index, 1)[0];
   return res.json({ message: 'Guru berhasil dihapus', data: removed });
+});
+
+router.get('/classes', authenticateToken, (req, res) => {
+  res.json({ data: classes });
+});
+
+router.post('/classes', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const payload = parseBody(req);
+  const newClass = { id: Date.now(), ...payload };
+  classes.push(newClass);
+  res.status(201).json({ message: 'Kelas berhasil ditambahkan', data: newClass });
+});
+
+router.put('/classes/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = classes.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Kelas tidak ditemukan' });
+  }
+
+  classes[index] = { ...classes[index], ...payload };
+  return res.json({ message: 'Kelas berhasil diperbarui', data: classes[index] });
+});
+
+router.delete('/classes/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = classes.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Kelas tidak ditemukan' });
+  }
+
+  const removed = classes.splice(index, 1)[0];
+  return res.json({ message: 'Kelas berhasil dihapus', data: removed });
+});
+
+router.get('/majors', authenticateToken, (req, res) => {
+  res.json({ data: majors });
+});
+
+router.post('/majors', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const payload = parseBody(req);
+  const newMajor = { id: Date.now(), ...payload };
+  majors.push(newMajor);
+  res.status(201).json({ message: 'Jurusan berhasil ditambahkan', data: newMajor });
+});
+
+router.put('/majors/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = majors.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Jurusan tidak ditemukan' });
+  }
+
+  majors[index] = { ...majors[index], ...payload };
+  return res.json({ message: 'Jurusan berhasil diperbarui', data: majors[index] });
+});
+
+router.delete('/majors/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = majors.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Jurusan tidak ditemukan' });
+  }
+
+  const removed = majors.splice(index, 1)[0];
+  return res.json({ message: 'Jurusan berhasil dihapus', data: removed });
 });
 
 export default router;

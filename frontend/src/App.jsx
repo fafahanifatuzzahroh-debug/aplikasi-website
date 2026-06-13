@@ -58,7 +58,7 @@ const roleContent = {
   siswa: {
     headline: 'Dashboard siswa yang ringkas dan informatif',
     summary: 'Akses profil, nilai, jadwal, tugas, materi, absensi, pengumuman, dan rapor digital dengan cepat.',
-    features: ['Dashboard siswa', 'Profil siswa', 'Nilai', 'Jadwal', 'Tugas', 'Materi', 'Absensi', 'Pengumuman', 'Rapor digital'],
+    features: ['Dashboard siswa', 'Profil siswa', 'Nilai', 'Jadwal', 'Tugas', 'Materi', 'Absensi', 'Pengumuman', 'Rapor digital', 'Kelas & jurusan'],
     metrics: [
       ['92%', 'Kehadiran'],
       ['12', 'Tugas aktif'],
@@ -141,6 +141,26 @@ const ppdbFlow = [
   'Seleksi otomatis',
   'Pengumuman hasil',
   'Cetak bukti pendaftaran',
+];
+
+const classPrograms = [
+  { name: 'X IPA 1', waliKelas: 'Siti Rahmawati, S.Pd', capacity: 36, major: 'IPA', distribution: '12 siswa PPDB, 24 siswa naik kelas' },
+  { name: 'X IPA 2', waliKelas: 'Dedi Kusnadi, S.Pd', capacity: 36, major: 'IPA', distribution: '11 siswa PPDB, 25 siswa pindahan' },
+  { name: 'XI IPS 1', waliKelas: 'Maya Lestari, M.Pd', capacity: 36, major: 'IPS', distribution: '36 siswa aktif' },
+  { name: 'XII Bahasa', waliKelas: 'Nina Marlina, S.Pd', capacity: 32, major: 'Bahasa', distribution: '32 siswa aktif' },
+];
+
+const majors = [
+  { name: 'IPA', desc: 'Pembagian fokus pada sains, eksperimen, dan analisis numerik.' },
+  { name: 'IPS', desc: 'Pembagian fokus pada ekonomi, sosial, geografi, dan sejarah.' },
+  { name: 'Bahasa', desc: 'Pembagian fokus pada literasi, komunikasi, dan bahasa asing.' },
+];
+
+const autoDistribution = [
+  { step: 'Input data siswa', note: 'Siswa baru direkam dari PPDB atau modul data siswa.' },
+  { step: 'Pemetaan jurusan', note: 'Sistem menandai jurusan sesuai hasil seleksi dan minat.' },
+  { step: 'Alokasi kelas', note: 'Siswa ditempatkan ke X IPA 1, X IPA 2, XI IPS 1, atau XII Bahasa.' },
+  { step: 'Validasi wali kelas', note: 'Wali kelas memeriksa jumlah siswa dan kapasitas kelas.' },
 ];
 
 const studentFormFields = [
@@ -351,6 +371,7 @@ export default function App() {
   const [teacherImportName, setTeacherImportName] = useState('Belum ada file');
   const [studentEditId, setStudentEditId] = useState(null);
   const [teacherEditId, setTeacherEditId] = useState(null);
+  const [activeClassName, setActiveClassName] = useState(classPrograms[0].name);
   const [selectedStudentId, setSelectedStudentId] = useState(studentSeed[0].id);
   const [selectedTeacherId, setSelectedTeacherId] = useState(teacherSeed[0].id);
   const [studentForm, setStudentForm] = useState({
@@ -390,6 +411,10 @@ export default function App() {
   const selectedTeacher = useMemo(
     () => teacherRecords.find((item) => item.id === selectedTeacherId) || teacherRecords[0],
     [teacherRecords, selectedTeacherId],
+  );
+  const activeClass = useMemo(
+    () => classPrograms.find((item) => item.name === activeClassName) || classPrograms[0],
+    [activeClassName],
   );
 
   const resetStudentForm = () => {
@@ -734,6 +759,7 @@ export default function App() {
             {[
               ['Akademik', 'Jadwal, nilai, absensi, rapor, materi, dan tugas.'],
               ['Kesiswaan', 'Bimbingan konseling, prestasi, dan catatan perkembangan.'],
+              ['Kelas & Jurusan', 'Tambah kelas, tambah jurusan, wali kelas, dan pembagian siswa otomatis.'],
               ['Komunikasi', 'Pengumuman, pesan internal, dan notifikasi orang tua.'],
               ['Administrasi', 'Surat menyurat, data induk, dan audit aktivitas.'],
               ['Keuangan', 'Tagihan, pembayaran, dan rekap administrasi.'],
@@ -971,6 +997,108 @@ export default function App() {
                       {['Tambah siswa', 'Edit siswa', 'Hapus siswa', 'Detail siswa', 'Pencarian siswa', 'Import Excel', 'Export Excel', 'Cetak PDF'].map((feature) => (
                         <span className="feature-chip" key={feature}>{feature}</span>
                       ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="kelas-jurusan">
+          <SectionTitle
+            eyebrow="Modul Kelas dan Jurusan"
+            title="Kelola kelas, jurusan, wali kelas, dan pembagian siswa otomatis"
+            subtitle="Contoh kelas tersedia: X IPA 1, X IPA 2, XI IPS 1, dan XII Bahasa dengan pengaturan wali kelas dan kapasitas."
+          />
+
+          <div className="row g-4 mt-1">
+            <div className="col-lg-5">
+              <div className="detail-card h-100">
+                <p className="eyebrow mb-1">Tambah Kelas & Jurusan</p>
+                <h4 className="mb-3">Struktur pembagian belajar</h4>
+                <div className="stack-gap">
+                  {majors.map((major) => (
+                    <div className="major-card" key={major.name}>
+                      <strong>{major.name}</strong>
+                      <span>{major.desc}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4">
+                  <p className="eyebrow mb-1">Pembagian siswa otomatis</p>
+                  <div className="stack-gap">
+                    {autoDistribution.map((item, index) => (
+                      <div className="calendar-item compact-item" key={item.step}>
+                        <div className="announcement-index">0{index + 1}</div>
+                        <div>
+                          <strong>{item.step}</strong>
+                          <p>{item.note}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-7">
+              <div className="table-card h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                  <div>
+                    <p className="eyebrow mb-1">Daftar Kelas</p>
+                    <h4 className="mb-0">Wali kelas dan kapasitas</h4>
+                  </div>
+                  <span className="chart-badge chart-badge-calendar">Pembagian otomatis</span>
+                </div>
+                <div className="class-selector mb-3">
+                  {classPrograms.map((item) => (
+                    <button
+                      key={item.name}
+                      className={`btn role-pill ${activeClassName === item.name ? 'active' : ''}`}
+                      type="button"
+                      onClick={() => setActiveClassName(item.name)}
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Kelas</th>
+                        <th>Jurusan</th>
+                        <th>Wali Kelas</th>
+                        <th>Kapasitas</th>
+                        <th>Pembagian Siswa</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {classPrograms.map((item) => (
+                        <tr key={item.name} className={activeClass?.name === item.name ? 'table-active' : ''}>
+                          <td>{item.name}</td>
+                          <td>{item.major}</td>
+                          <td>{item.waliKelas}</td>
+                          <td>{item.capacity}</td>
+                          <td>{item.distribution}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="row g-3 mt-3">
+                  <div className="col-md-6">
+                    <div className="detail-card h-100">
+                      <p className="eyebrow mb-1">Kelas Aktif</p>
+                      <h4 className="mb-0">{activeClass.name}</h4>
+                      <p className="text-muted mb-0 mt-2">Wali kelas: {activeClass.waliKelas}</p>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="detail-card h-100">
+                      <p className="eyebrow mb-1">Info Jurusan</p>
+                      <h4 className="mb-0">{activeClass.major}</h4>
+                      <p className="text-muted mb-0 mt-2">Pembagian siswa otomatis mengikuti kapasitas dan hasil seleksi.</p>
                     </div>
                   </div>
                 </div>
