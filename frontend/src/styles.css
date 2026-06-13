@@ -446,6 +446,13 @@ a {
   line-height: 1.55;
 }
 
+.major-card small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .class-selector {
   display: flex;
   flex-wrap: wrap;
@@ -454,6 +461,11 @@ a {
 
 .compact-item {
   align-items: flex-start;
+}
+
+.data-form {
+  display: grid;
+  gap: 12px;
 }
 
 .module-toolbar {

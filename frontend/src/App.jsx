@@ -163,6 +163,43 @@ const autoDistribution = [
   { step: 'Validasi wali kelas', note: 'Wali kelas memeriksa jumlah siswa dan kapasitas kelas.' },
 ];
 
+const subjectGroups = [
+  { name: 'Mapel Wajib', description: 'Bahasa Indonesia, Matematika, Bahasa Inggris, dan PPKn.' },
+  { name: 'Mapel Peminatan IPA', description: 'Fisika, Kimia, dan Biologi.' },
+  { name: 'Mapel Peminatan IPS', description: 'Ekonomi, Sejarah, Geografi, dan Sosiologi.' },
+  { name: 'Mapel Peminatan Bahasa', description: 'Sastra Indonesia, Bahasa Asing, dan Linguistik.' },
+];
+
+const subjectSeed = [
+  { id: 1, nama: 'Matematika', kelompok: 'Mapel Wajib', guruPengampu: 'Siti Rahmawati, S.Pd', kkm: 75 },
+  { id: 2, nama: 'Biologi', kelompok: 'Mapel Peminatan IPA', guruPengampu: 'Maya Lestari, M.Pd', kkm: 78 },
+  { id: 3, nama: 'Ekonomi', kelompok: 'Mapel Peminatan IPS', guruPengampu: 'Dedi Kusnadi, S.Pd', kkm: 76 },
+  { id: 4, nama: 'Bahasa Inggris', kelompok: 'Mapel Wajib', guruPengampu: 'Nina Marlina, S.Pd', kkm: 74 },
+];
+
+const scheduleSeed = [
+  { id: 1, jenis: 'Jadwal Harian', target: 'XI IPA 1', mapel: 'Matematika', guru: 'Siti Rahmawati, S.Pd', waktu: 'Senin 07.00 - 08.30' },
+  { id: 2, jenis: 'Jadwal Mingguan', target: 'Kelas X', mapel: 'Biologi', guru: 'Maya Lestari, M.Pd', waktu: 'Selasa & Kamis' },
+  { id: 3, jenis: 'Jadwal Ujian', target: 'XII Bahasa', mapel: 'Bahasa Inggris', guru: 'Nina Marlina, S.Pd', waktu: '22 Agu 08.00' },
+  { id: 4, jenis: 'Jadwal Guru', target: 'Dedi Kusnadi, S.Pd', mapel: 'Ekonomi', guru: 'Dedi Kusnadi, S.Pd', waktu: 'Selasa, Kamis, Sabtu' },
+  { id: 5, jenis: 'Jadwal Siswa', target: 'Andi Pratama', mapel: 'Matematika', guru: 'Siti Rahmawati, S.Pd', waktu: 'Hari efektif sekolah' },
+];
+
+const subjectFormFields = [
+  { name: 'nama', label: 'Nama Mata Pelajaran', type: 'text', placeholder: 'Contoh: Fisika' },
+  { name: 'kelompok', label: 'Kelompok Mapel', type: 'text', placeholder: 'Contoh: Mapel Peminatan IPA' },
+  { name: 'guruPengampu', label: 'Guru Pengampu', type: 'text', placeholder: 'Nama guru pengampu' },
+  { name: 'kkm', label: 'KKM', type: 'number', placeholder: 'Contoh: 75' },
+];
+
+const scheduleFormFields = [
+  { name: 'jenis', label: 'Jenis Jadwal', type: 'text', placeholder: 'Jadwal Harian / Mingguan / Ujian / Guru / Siswa' },
+  { name: 'target', label: 'Target', type: 'text', placeholder: 'Kelas, guru, atau siswa' },
+  { name: 'mapel', label: 'Mata Pelajaran', type: 'text', placeholder: 'Nama mapel' },
+  { name: 'guru', label: 'Guru', type: 'text', placeholder: 'Nama guru' },
+  { name: 'waktu', label: 'Waktu', type: 'text', placeholder: 'Contoh: Senin 07.00 - 08.30' },
+];
+
 const studentFormFields = [
   { name: 'nis', label: 'NIS', type: 'text', placeholder: 'Nomor induk sekolah' },
   { name: 'nisn', label: 'NISN', type: 'text', placeholder: 'Nomor induk nasional' },
@@ -374,6 +411,16 @@ export default function App() {
   const [activeClassName, setActiveClassName] = useState(classPrograms[0].name);
   const [selectedStudentId, setSelectedStudentId] = useState(studentSeed[0].id);
   const [selectedTeacherId, setSelectedTeacherId] = useState(teacherSeed[0].id);
+  const [subjectRecords, setSubjectRecords] = useState(subjectSeed);
+  const [scheduleRecords, setScheduleRecords] = useState(scheduleSeed);
+  const [subjectQuery, setSubjectQuery] = useState('');
+  const [scheduleQuery, setScheduleQuery] = useState('');
+  const [selectedSubjectId, setSelectedSubjectId] = useState(subjectSeed[0].id);
+  const [selectedScheduleId, setSelectedScheduleId] = useState(scheduleSeed[0].id);
+  const [subjectEditId, setSubjectEditId] = useState(null);
+  const [scheduleEditId, setScheduleEditId] = useState(null);
+  const [subjectForm, setSubjectForm] = useState({ nama: '', kelompok: '', guruPengampu: '', kkm: '' });
+  const [scheduleForm, setScheduleForm] = useState({ jenis: '', target: '', mapel: '', guru: '', waktu: '' });
   const [studentForm, setStudentForm] = useState({
     nis: '',
     nisn: '',
@@ -416,6 +463,22 @@ export default function App() {
     () => classPrograms.find((item) => item.name === activeClassName) || classPrograms[0],
     [activeClassName],
   );
+  const filteredSubjects = useMemo(
+    () => subjectRecords.filter((item) => [item.nama, item.kelompok, item.guruPengampu, String(item.kkm)].join(' ').toLowerCase().includes(subjectQuery.toLowerCase())),
+    [subjectRecords, subjectQuery],
+  );
+  const filteredSchedules = useMemo(
+    () => scheduleRecords.filter((item) => [item.jenis, item.target, item.mapel, item.guru, item.waktu].join(' ').toLowerCase().includes(scheduleQuery.toLowerCase())),
+    [scheduleRecords, scheduleQuery],
+  );
+  const selectedSubject = useMemo(
+    () => subjectRecords.find((item) => item.id === selectedSubjectId) || subjectRecords[0],
+    [subjectRecords, selectedSubjectId],
+  );
+  const selectedSchedule = useMemo(
+    () => scheduleRecords.find((item) => item.id === selectedScheduleId) || scheduleRecords[0],
+    [scheduleRecords, selectedScheduleId],
+  );
 
   const resetStudentForm = () => {
     setStudentEditId(null);
@@ -435,6 +498,16 @@ export default function App() {
   const handleTeacherFormChange = (event) => {
     const { name, value } = event.target;
     setTeacherForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubjectFormChange = (event) => {
+    const { name, value } = event.target;
+    setSubjectForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleScheduleFormChange = (event) => {
+    const { name, value } = event.target;
+    setScheduleForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleStudentSubmit = (event) => {
@@ -467,6 +540,60 @@ export default function App() {
     }
 
     resetTeacherForm();
+  };
+
+  const handleSubjectSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...subjectForm, kkm: Number(subjectForm.kkm) || 0 };
+
+    if (subjectEditId) {
+      setSubjectRecords((prev) => prev.map((item) => (item.id === subjectEditId ? { ...item, ...payload } : item)));
+      setSelectedSubjectId(subjectEditId);
+    } else {
+      const nextId = Date.now();
+      setSubjectRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedSubjectId(nextId);
+    }
+
+    setSubjectEditId(null);
+    setSubjectForm({ nama: '', kelompok: '', guruPengampu: '', kkm: '' });
+  };
+
+  const handleScheduleSubmit = (event) => {
+    event.preventDefault();
+    const payload = { ...scheduleForm };
+
+    if (scheduleEditId) {
+      setScheduleRecords((prev) => prev.map((item) => (item.id === scheduleEditId ? { ...item, ...payload } : item)));
+      setSelectedScheduleId(scheduleEditId);
+    } else {
+      const nextId = Date.now();
+      setScheduleRecords((prev) => [...prev, { id: nextId, ...payload }]);
+      setSelectedScheduleId(nextId);
+    }
+
+    setScheduleEditId(null);
+    setScheduleForm({ jenis: '', target: '', mapel: '', guru: '', waktu: '' });
+  };
+
+  const handleSubjectEdit = (subject) => {
+    setSubjectEditId(subject.id);
+    setSubjectForm({ nama: subject.nama, kelompok: subject.kelompok, guruPengampu: subject.guruPengampu, kkm: String(subject.kkm) });
+  };
+
+  const handleScheduleEdit = (schedule) => {
+    setScheduleEditId(schedule.id);
+    setScheduleForm({ jenis: schedule.jenis, target: schedule.target, mapel: schedule.mapel, guru: schedule.guru, waktu: schedule.waktu });
+  };
+
+  const handleSubjectDelete = (id) => {
+    setSubjectRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedSubjectId((currentId) => (currentId === id ? subjectSeed[0].id : currentId));
+  };
+
+  const handleScheduleDelete = (id) => {
+    setScheduleRecords((prev) => prev.filter((item) => item.id !== id));
+    setSelectedScheduleId((currentId) => (currentId === id ? scheduleSeed[0].id : currentId));
   };
 
   const handleStudentEdit = (student) => {
@@ -1099,6 +1226,210 @@ export default function App() {
                       <p className="eyebrow mb-1">Info Jurusan</p>
                       <h4 className="mb-0">{activeClass.major}</h4>
                       <p className="text-muted mb-0 mt-2">Pembagian siswa otomatis mengikuti kapasitas dan hasil seleksi.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="mata-pelajaran">
+          <SectionTitle
+            eyebrow="Modul Mata Pelajaran"
+            title="CRUD mata pelajaran, kelompok mapel, guru pengampu, dan KKM"
+            subtitle="Kelola mapel wajib dan peminatan dalam satu tempat dengan tampilan yang mendukung pencarian dan detail data."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredSubjects.length} mapel ditemukan</strong>
+              <span>Kelompok mapel aktif: {subjectGroups.length}</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari mata pelajaran" value={subjectQuery} onChange={(event) => setSubjectQuery(event.target.value)} />
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                  <div>
+                    <p className="eyebrow mb-1">{subjectEditId ? 'Edit Mapel' : 'Tambah Mapel'}</p>
+                    <h4 className="mb-0">Form mata pelajaran</h4>
+                  </div>
+                  {subjectEditId ? <span className="chart-badge chart-badge-students">Mode edit</span> : null}
+                </div>
+                <form className="data-form" onSubmit={handleSubjectSubmit}>
+                  <div className="row g-3">
+                    {subjectFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`subject-${field.name}`}>{field.label}</label>
+                        <input className="form-control sis-input" id={`subject-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={subjectForm[field.name]} onChange={handleSubjectFormChange} required />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{subjectEditId ? 'Simpan Perubahan' : 'Tambah Mapel'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={() => { setSubjectEditId(null); setSubjectForm({ nama: '', kelompok: '', guruPengampu: '', kkm: '' }); }}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Mapel</th>
+                        <th>Kelompok</th>
+                        <th>Guru Pengampu</th>
+                        <th>KKM</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredSubjects.map((subject) => (
+                        <tr key={subject.id} className={selectedSubject?.id === subject.id ? 'table-active' : ''}>
+                          <td>{subject.nama}</td>
+                          <td>{subject.kelompok}</td>
+                          <td>{subject.guruPengampu}</td>
+                          <td>{subject.kkm}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedSubjectId(subject.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleSubjectEdit(subject)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleSubjectDelete(subject.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Detail Mapel</p>
+                    <h4 className="mb-3">{selectedSubject?.nama}</h4>
+                    <div className="detail-list">
+                      <div><span>Kelompok Mapel</span><strong>{selectedSubject?.kelompok}</strong></div>
+                      <div><span>Guru Pengampu</span><strong>{selectedSubject?.guruPengampu}</strong></div>
+                      <div><span>KKM</span><strong>{selectedSubject?.kkm}</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Kelompok Mapel</p>
+                    <div className="stack-gap">
+                      {subjectGroups.map((group) => (
+                        <div className="major-card" key={group.name}>
+                          <strong>{group.name}</strong>
+                          <span>{group.description}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 p-lg-5 mb-4" id="jadwal-pelajaran">
+          <SectionTitle
+            eyebrow="Modul Jadwal Pelajaran"
+            title="Jadwal harian, mingguan, ujian, guru, dan siswa"
+            subtitle="Semua jenis jadwal sekolah dapat dikelola dalam satu modul dengan pencarian dan detail yang jelas."
+          />
+
+          <div className="module-toolbar mt-4">
+            <div className="toolbar-meta">
+              <strong>{filteredSchedules.length} jadwal ditemukan</strong>
+              <span>Jenis jadwal: harian, mingguan, ujian, guru, dan siswa</span>
+            </div>
+            <div className="toolbar-actions">
+              <input className="form-control sis-input" type="search" placeholder="Cari jadwal" value={scheduleQuery} onChange={(event) => setScheduleQuery(event.target.value)} />
+            </div>
+          </div>
+
+          <div className="row g-4 mt-2">
+            <div className="col-lg-4">
+              <div className="detail-card h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                  <div>
+                    <p className="eyebrow mb-1">{scheduleEditId ? 'Edit Jadwal' : 'Tambah Jadwal'}</p>
+                    <h4 className="mb-0">Form jadwal pelajaran</h4>
+                  </div>
+                  {scheduleEditId ? <span className="chart-badge chart-badge-attendance">Mode edit</span> : null}
+                </div>
+                <form className="data-form" onSubmit={handleScheduleSubmit}>
+                  <div className="row g-3">
+                    {scheduleFormFields.map((field) => (
+                      <div className="col-12" key={field.name}>
+                        <label className="form-label text-light fw-semibold" htmlFor={`schedule-${field.name}`}>{field.label}</label>
+                        <input className="form-control sis-input" id={`schedule-${field.name}`} name={field.name} type={field.type} placeholder={field.placeholder} value={scheduleForm[field.name]} onChange={handleScheduleFormChange} required />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex flex-wrap gap-2 mt-3">
+                    <button className="btn btn-primary" type="submit">{scheduleEditId ? 'Simpan Perubahan' : 'Tambah Jadwal'}</button>
+                    <button className="btn btn-outline-light" type="button" onClick={() => { setScheduleEditId(null); setScheduleForm({ jenis: '', target: '', mapel: '', guru: '', waktu: '' }); }}>Batal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="table-card h-100">
+                <div className="table-responsive">
+                  <table className="table table-dark table-hover align-middle data-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Jenis</th>
+                        <th>Target</th>
+                        <th>Mapel</th>
+                        <th>Guru</th>
+                        <th>Waktu</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredSchedules.map((schedule) => (
+                        <tr key={schedule.id} className={selectedSchedule?.id === schedule.id ? 'table-active' : ''}>
+                          <td>{schedule.jenis}</td>
+                          <td>{schedule.target}</td>
+                          <td>{schedule.mapel}</td>
+                          <td>{schedule.guru}</td>
+                          <td>{schedule.waktu}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => setSelectedScheduleId(schedule.id)}>Detail</button>
+                              <button className="btn btn-sm btn-outline-light" type="button" onClick={() => handleScheduleEdit(schedule)}>Edit</button>
+                              <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => handleScheduleDelete(schedule.id)}>Hapus</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="detail-grid mt-3">
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Detail Jadwal</p>
+                    <h4 className="mb-3">{selectedSchedule?.jenis}</h4>
+                    <div className="detail-list">
+                      <div><span>Target</span><strong>{selectedSchedule?.target}</strong></div>
+                      <div><span>Mata Pelajaran</span><strong>{selectedSchedule?.mapel}</strong></div>
+                      <div><span>Guru</span><strong>{selectedSchedule?.guru}</strong></div>
+                      <div><span>Waktu</span><strong>{selectedSchedule?.waktu}</strong></div>
+                    </div>
+                  </div>
+                  <div className="detail-card">
+                    <p className="eyebrow mb-1">Jenis Jadwal</p>
+                    <div className="feature-chip-list">
+                      {['Jadwal harian', 'Jadwal mingguan', 'Jadwal ujian', 'Jadwal guru', 'Jadwal siswa'].map((feature) => (
+                        <span className="feature-chip" key={feature}>{feature}</span>
+                      ))}
                     </div>
                   </div>
                 </div>

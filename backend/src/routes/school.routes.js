@@ -64,6 +64,18 @@ const majors = [
   { id: 3, name: 'Bahasa', description: 'Fokus pada literasi, komunikasi, dan bahasa asing.' },
 ];
 
+const subjects = [
+  { id: 1, nama: 'Matematika', kelompok: 'Mapel Wajib', guruPengampu: 'Siti Rahmawati, S.Pd', kkm: 75 },
+  { id: 2, nama: 'Biologi', kelompok: 'Mapel Peminatan IPA', guruPengampu: 'Maya Lestari, M.Pd', kkm: 78 },
+  { id: 3, nama: 'Ekonomi', kelompok: 'Mapel Peminatan IPS', guruPengampu: 'Dedi Kusnadi, S.Pd', kkm: 76 },
+];
+
+const schedules = [
+  { id: 1, jenis: 'Jadwal Harian', target: 'XI IPA 1', mapel: 'Matematika', guru: 'Siti Rahmawati, S.Pd', waktu: 'Senin 07.00 - 08.30' },
+  { id: 2, jenis: 'Jadwal Mingguan', target: 'Kelas X', mapel: 'Biologi', guru: 'Maya Lestari, M.Pd', waktu: 'Selasa & Kamis' },
+  { id: 3, jenis: 'Jadwal Ujian', target: 'XII Bahasa', mapel: 'Bahasa Inggris', guru: 'Nina Marlina, S.Pd', waktu: '22 Agu 08.00' },
+];
+
 const parseBody = (req) => req.body ?? {};
 
 router.get('/dashboard', authenticateToken, (req, res) => {
@@ -223,6 +235,78 @@ router.delete('/majors/:id', authenticateToken, authorizeRoles('superadmin', 'ad
 
   const removed = majors.splice(index, 1)[0];
   return res.json({ message: 'Jurusan berhasil dihapus', data: removed });
+});
+
+router.get('/subjects', authenticateToken, (req, res) => {
+  res.json({ data: subjects });
+});
+
+router.post('/subjects', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const payload = parseBody(req);
+  const newSubject = { id: Date.now(), ...payload };
+  subjects.push(newSubject);
+  res.status(201).json({ message: 'Mata pelajaran berhasil ditambahkan', data: newSubject });
+});
+
+router.put('/subjects/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = subjects.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Mata pelajaran tidak ditemukan' });
+  }
+
+  subjects[index] = { ...subjects[index], ...payload };
+  return res.json({ message: 'Mata pelajaran berhasil diperbarui', data: subjects[index] });
+});
+
+router.delete('/subjects/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = subjects.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Mata pelajaran tidak ditemukan' });
+  }
+
+  const removed = subjects.splice(index, 1)[0];
+  return res.json({ message: 'Mata pelajaran berhasil dihapus', data: removed });
+});
+
+router.get('/schedules', authenticateToken, (req, res) => {
+  res.json({ data: schedules });
+});
+
+router.post('/schedules', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const payload = parseBody(req);
+  const newSchedule = { id: Date.now(), ...payload };
+  schedules.push(newSchedule);
+  res.status(201).json({ message: 'Jadwal berhasil ditambahkan', data: newSchedule });
+});
+
+router.put('/schedules/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const payload = parseBody(req);
+  const index = schedules.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Jadwal tidak ditemukan' });
+  }
+
+  schedules[index] = { ...schedules[index], ...payload };
+  return res.json({ message: 'Jadwal berhasil diperbarui', data: schedules[index] });
+});
+
+router.delete('/schedules/:id', authenticateToken, authorizeRoles('superadmin', 'adminsekolah'), (req, res) => {
+  const id = Number(req.params.id);
+  const index = schedules.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Jadwal tidak ditemukan' });
+  }
+
+  const removed = schedules.splice(index, 1)[0];
+  return res.json({ message: 'Jadwal berhasil dihapus', data: removed });
 });
 
 export default router;
