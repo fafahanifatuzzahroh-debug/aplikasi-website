@@ -1,20 +1,35 @@
 # SIS Terintegrasi SMA Negeri
 
-Aplikasi website Sistem Informasi Sekolah terintegrasi untuk SMA Negeri, dibangun sebagai dashboard modern yang responsif, cepat, dan mudah digunakan oleh Admin, Kepala Sekolah, Guru, Siswa, Orang Tua, dan Calon Peserta Didik.
+Aplikasi website Sistem Informasi Sekolah terintegrasi untuk SMA Negeri dengan stack full-stack modern: frontend React.js + Bootstrap 5, backend Node.js + Express.js, database MySQL, autentikasi JWT, RBAC, dan deployment via Docker, Nginx, serta VPS Linux.
 
-## Fitur Utama
+## Stack
 
-- Dashboard multi-peran dengan tampilan berbeda untuk tiap jenis pengguna.
-- Modul inti akademik, administrasi, komunikasi, kesiswaan, keuangan, dan PPDB.
-- Antarmuka responsif dengan navigasi ringan dan visual modern.
-- Desain akses berbasis peran yang siap dikembangkan ke autentikasi dan backend.
+- Frontend: HTML5, CSS3, JavaScript ES6, Bootstrap 5, React.js
+- Backend: Node.js, Express.js
+- Database: MySQL
+- Authentication: JWT Authentication, Role Based Access Control (RBAC)
+- Deployment: Docker, Nginx, VPS Linux
+
+## Struktur Project
+
+- [frontend/](frontend/) - aplikasi React yang menjadi antarmuka utama.
+- [backend/](backend/) - API Express dengan JWT dan RBAC.
+- [mysql/init.sql](mysql/init.sql) - skema awal database MySQL.
+- [docker-compose.yml](docker-compose.yml) - orkestrasi layanan untuk development dan deployment.
+- [nginx/nginx.conf](nginx/nginx.conf) - konfigurasi reverse proxy.
 
 ## Cara Menjalankan
 
-Proyek ini berupa website statis. Buka file [index.html](index.html) langsung di browser, atau jalankan melalui server statis jika ingin pengembangan lokal yang lebih nyaman.
+1. Salin [`.env.example`](.env.example) menjadi `.env` dan sesuaikan kredensial.
+2. Jalankan `npm install` di root, lalu `npm install` pada folder `frontend` dan `backend` jika diperlukan.
+3. Untuk development, gunakan `npm run dev` dari root.
+4. Untuk deployment dengan Docker, jalankan `docker compose up --build`.
 
-## Struktur File
+## Akun Demo
 
-- [index.html](index.html) - kerangka halaman utama.
-- [styles.css](styles.css) - tampilan dan responsivitas.
-- [app.js](app.js) - data dashboard dan interaksi peran.
+- `admin@sma.sch.id` / `password123`
+- `kepsek@sma.sch.id` / `password123`
+
+## Catatan
+
+Prototype statis lama masih tersedia di root repo, tetapi implementasi utama sekarang berada di folder `frontend/` dan `backend/`.

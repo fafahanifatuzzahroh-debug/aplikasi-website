@@ -1,0 +1,49 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: sis-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: sis_db
+      MYSQL_USER: sis_user
+      MYSQL_PASSWORD: sis_password
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: sis-backend
+    restart: unless-stopped
+    environment:
+      PORT: 4000
+      JWT_SECRET: change-this-secret
+      DB_HOST: mysql
+      DB_USER: sis_user
+      DB_PASSWORD: sis_password
+      DB_NAME: sis_db
+      DB_PORT: 3306
+      CORS_ORIGIN: http://localhost
+    depends_on:
+      - mysql
+    ports:
+      - '4000:4000'
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: sis-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '8080:80'
+
+volumes:
+  mysql_data:
