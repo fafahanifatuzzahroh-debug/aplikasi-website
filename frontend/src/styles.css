@@ -145,6 +145,302 @@ a {
   border: 1px solid rgba(157, 183, 212, 0.12);
 }
 
+.total-card,
+.chart-card,
+.calendar-card,
+.announcement-card,
+.ppdb-summary-card {
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(157, 183, 212, 0.12);
+}
+
+.total-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.total-card strong {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.55rem;
+}
+
+.total-card span {
+  color: var(--muted);
+}
+
+.total-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.total-icon-students,
+.chart-badge-students,
+.bar-fill-students {
+  background: linear-gradient(180deg, rgba(103, 213, 255, 0.92), rgba(103, 213, 255, 0.34));
+}
+
+.total-icon-guru,
+.chart-badge-grades,
+.bar-fill-grades {
+  background: linear-gradient(180deg, rgba(75, 215, 168, 0.92), rgba(75, 215, 168, 0.34));
+}
+
+.total-icon-kelas,
+.chart-badge-attendance,
+.bar-fill-attendance {
+  background: linear-gradient(180deg, rgba(255, 184, 107, 0.92), rgba(255, 184, 107, 0.34));
+}
+
+.total-icon-jurusan {
+  background: linear-gradient(180deg, rgba(255, 122, 144, 0.92), rgba(255, 122, 144, 0.34));
+}
+
+.total-icon-alumni {
+  background: linear-gradient(180deg, rgba(164, 133, 255, 0.92), rgba(164, 133, 255, 0.34));
+}
+
+.total-icon-payment {
+  background: linear-gradient(180deg, rgba(255, 211, 102, 0.92), rgba(255, 211, 102, 0.34));
+}
+
+.bar-chart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+  min-height: 220px;
+}
+
+.bar-item {
+  display: grid;
+  gap: 8px;
+  align-items: end;
+  justify-items: center;
+}
+
+.bar-value {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.bar-track {
+  width: 100%;
+  height: 148px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.bar-fill {
+  width: 100%;
+  border-radius: 999px;
+}
+
+.bar-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.chart-card h4,
+.calendar-card h4,
+.announcement-card h4,
+.ppdb-summary-card h4 {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.chart-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #03131f;
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+
+.chart-badge-calendar {
+  background: rgba(255, 184, 107, 0.88);
+}
+
+.chart-badge-announcement {
+  background: rgba(75, 215, 168, 0.88);
+}
+
+.line-chart {
+  width: 100%;
+  height: 170px;
+}
+
+.line-path,
+.line-area {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line-path-students,
+.line-path-grades,
+.line-path-attendance {
+  stroke: var(--accent);
+  stroke-width: 3.5;
+}
+
+.line-area-students,
+.line-area-grades,
+.line-area-attendance {
+  fill: rgba(103, 213, 255, 0.08);
+}
+
+.chart-axis {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.calendar-list,
+.announcement-list,
+.stack-gap {
+  display: grid;
+  gap: 12px;
+}
+
+.calendar-item,
+.announcement-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(157, 183, 212, 0.12);
+}
+
+.calendar-date,
+.announcement-index {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(103, 213, 255, 0.24), rgba(255, 255, 255, 0.04));
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+.calendar-item strong,
+.announcement-item strong,
+.feature-line {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.calendar-item p,
+.announcement-item p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.ppdb-form .form-label {
+  margin-bottom: 8px;
+}
+
+.sis-input,
+.sis-input:focus,
+.sis-file {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(157, 183, 212, 0.16);
+  color: var(--text);
+}
+
+.sis-input::placeholder {
+  color: rgba(164, 182, 204, 0.72);
+}
+
+.sis-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(103, 213, 255, 0.14);
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.upload-box {
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(157, 183, 212, 0.12);
+  display: grid;
+  gap: 8px;
+}
+
+.upload-box strong {
+  font-size: 0.96rem;
+}
+
+.upload-box span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.card-stack {
+  display: grid;
+  gap: 14px;
+}
+
+.feature-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.feature-chip,
+.feature-line {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(157, 183, 212, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.feature-line {
+  width: 100%;
+}
+
+@media (max-width: 991px) {
+  .bar-chart {
+    min-height: 180px;
+  }
+
+  .upload-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .metric-card strong {
   display: block;
   font-family: 'Space Grotesk', sans-serif;
